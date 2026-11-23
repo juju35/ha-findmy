@@ -90,9 +90,10 @@ jobs:
         with:
           python-version: "3.14"
 
-      # 0.13.336 pins homeassistant==2026.6.0, the minimum in hacs.json.
+      # 0.13.336 pins homeassistant==2026.6.0, the minimum in hacs.json; pyicloud 2.6.5 is the oldest version the
+      # manifest allows (the one Home Assistant's own iCloud integration pins).
       - name: Install dependencies
-        run: pip install pytest-homeassistant-custom-component==0.13.336 "findmy>=0.10.2" "pyicloud>=2.7.0"
+        run: pip install pytest-homeassistant-custom-component==0.13.336 "findmy>=0.10.2" "pyicloud==2.6.5"
 
       - name: Run tests
         run: pytest
