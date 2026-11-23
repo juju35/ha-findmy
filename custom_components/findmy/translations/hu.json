@@ -1,0 +1,268 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Find My",
+        "menu_options": {
+          "icloud": "iCloud-fiók (iPhone, iPad, Mac, Apple Watch, AirPods)",
+          "network": "Find My hálózati fiók (AirTagek és tartozékok)"
+        }
+      },
+      "icloud": {
+        "title": "iCloud-fiók",
+        "description": "Jelentkezz be azzal az Apple-fiókkal, amelynek eszközeit követni szeretnéd.",
+        "data": {
+          "apple_id": "Apple-fiók",
+          "password": "Jelszó",
+          "with_family": "Családi eszközök hozzáadása"
+        },
+        "data_description": {
+          "with_family": "A helyzetüket veled megosztó családtagok eszközeit is hozzáadja"
+        }
+      },
+      "icloud_code": {
+        "title": "Ellenőrző kód",
+        "description": "Írd be az ellenőrző kódot, amelyet az Apple a megbízható Apple-eszközeidre vagy SMS-ben küldött. A Home Assistant ezután megbízható munkamenet lesz, és nem kéri újra a kódot.",
+        "data": {
+          "code": "Ellenőrző kód"
+        }
+      },
+      "network": {
+        "title": "Find My hálózati fiók",
+        "description": "Jelentkezz be azzal az Apple-fiókkal, amelyhez a tartozékok tartoznak. A helyzetüket a Find My hálózatról kérjük le.",
+        "data": {
+          "apple_id": "Apple-fiók",
+          "password": "Jelszó"
+        },
+        "sections": {
+          "advanced": {
+            "name": "Speciális beállítások",
+            "description": "Az Apple csak az anisette-adatokat küldő klienseknek válaszol. Alapértelmezés szerint itt jönnek létre; add meg a saját anisette-kiszolgálód címét, ha azt szeretnéd használni.",
+            "data": {
+              "anisette_url": "Anisette-kiszolgáló"
+            },
+            "data_description": {
+              "anisette_url": "Például http://192.168.1.10:6969, üresen itt jönnek létre"
+            }
+          }
+        }
+      },
+      "network_method": {
+        "title": "Ellenőrzési mód",
+        "description": "Hogyan küldje az Apple az ellenőrző kódot?",
+        "data": {
+          "method": "Kód küldése ide"
+        }
+      },
+      "network_code": {
+        "title": "Ellenőrző kód",
+        "description": "Írd be a megbízható Apple-eszközeiden megjelenő ellenőrző kódot.",
+        "data": {
+          "code": "Ellenőrző kód"
+        }
+      },
+      "network_sms_code": {
+        "title": "Ellenőrző kód",
+        "description": "Írd be a(z) {phone} számra SMS-ben küldött ellenőrző kódot.",
+        "data": {
+          "code": "Ellenőrző kód"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Újbóli bejelentkezés",
+        "description": "Az iCloud újbóli bejelentkezést kér a(z) {account} fióktól. Írd be a jelszót; ellenőrző kód is következhet.",
+        "data": {
+          "password": "Jelszó"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Hibás Apple-fiók vagy jelszó.",
+      "cannot_connect": "Az Apple nem érhető el. Próbáld újra néhány perc múlva.",
+      "anisette_error": "A bejelentkezés nem sikerült: ellenőrizd, hogy az anisette-kiszolgáló válaszol-e, vagy hagyd üresen.",
+      "code_not_sent": "Az Apple nem küldött ellenőrző kódot. Próbáld újra néhány perc múlva.",
+      "invalid_code": "Hibás vagy lejárt ellenőrző kód.",
+      "no_second_factor": "Ennek az Apple-fióknak nincs megbízható eszköze vagy telefonszáma az ellenőrző kód fogadásához.",
+      "security_key": "Ez az Apple-fiók biztonsági kulccsal jelentkezik be, ami nem támogatott. Használj ellenőrző kódos fiókot."
+    },
+    "abort": {
+      "already_configured": "Ez a fiók már hozzá van adva.",
+      "reauth_successful": "Újra bejelentkezve.",
+      "code_not_sent": "Az Apple nem küldött ellenőrző kódot. Próbáld újra néhány perc múlva.",
+      "wrong_account": "Ez nem ennek a bejegyzésnek a fiókja: ugyanazzal az Apple-fiókkal jelentkezz be."
+    }
+  },
+  "config_subentries": {
+    "accessory": {
+      "entry_type": "Tartozék",
+      "initiate_flow": {
+        "user": "Tartozékok hozzáadása"
+      },
+      "step": {
+        "user": {
+          "title": "Tartozékok hozzáadása",
+          "description": "Az AirTagek és más tartozékok kulcsait a Find My app tárolja egy Macen: exportáld őket a Macről, majd importáld ide.",
+          "menu_options": {
+            "archive": "Egy export összes tartozéka (.zip)",
+            "plist": "Egy tartozék (.plist)",
+            "json": "Egy tartozék vagy kulcslista (.json)",
+            "key": "Fix kulcsú címke"
+          }
+        },
+        "archive": {
+          "title": "Export importálása",
+          "description": "Az exportált Find My-adatok zip-fájlja: az OwnedBeacons mappa minden tartozéka bekerül, a nevével és a kulcsigazításával, ha a zip tartalmazza.",
+          "data": {
+            "file": "Export (.zip)"
+          }
+        },
+        "plist": {
+          "title": "Egy tartozék",
+          "description": "A tartozék fájlja az OwnedBeacons mappából és opcionálisan a KeyAlignmentRecords mappából, amely sokkal gyorsabbá teszi az első lekérést egy régen párosított tartozéknál.",
+          "data": {
+            "file": "Tartozék (.plist)",
+            "alignment": "Kulcsigazítás (.plist)",
+            "name": "Név"
+          },
+          "data_description": {
+            "name": "Üresen a modell nevét használja"
+          }
+        },
+        "json": {
+          "title": "JSON-fájl",
+          "description": "JSON-ként exportált tartozék, vagy egy DIY-címke előre generált privát kulcsainak listája.",
+          "data": {
+            "file": "Fájl (.json)",
+            "name": "Név"
+          }
+        },
+        "key": {
+          "title": "Fix kulcs",
+          "description": "Mindig ugyanazt a kulcsot sugárzó DIY-címke.",
+          "data": {
+            "private_key": "Privát kulcs",
+            "name": "Név"
+          },
+          "data_description": {
+            "private_key": "Base64 (vagy 56 hexadecimális karakter)"
+          }
+        }
+      },
+      "error": {
+        "invalid_plist": "Ez a fájl nem tulajdonságlista (.plist).",
+        "encrypted_plist": "Ez a fájl még titkosított (macOS 14-től): exportáld egy olyan eszközzel, amely visszafejti a Find My-adatokat.",
+        "not_an_accessory": "Ez a tulajdonságlista nem Find My-tartozék.",
+        "invalid_zip": "Ez a fájl nem a Find My-adatok zip-fájlja.",
+        "no_accessory_in_zip": "Nem található tartozék: a zipnek tartalmaznia kell az OwnedBeacons mappát.",
+        "invalid_json": "Ez a fájl nem tartozék és nem kulcslista.",
+        "invalid_key": "Ez nem privát kulcs (28 bájt, base64 vagy hexadecimális formában)."
+      },
+      "abort": {
+        "already_configured": "Ez a tartozék már hozzá van adva."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Find My hálózat",
+        "data": {
+          "scan_interval": "Frissítési időköz"
+        },
+        "data_description": {
+          "scan_interval": "Milyen gyakran kérjük le a helyzeteket (15–120 perc). A tartozékok nagyjából 15 percenként küldik a helyzetüket: a gyakoribb lekérés nem hoz semmit, és az Apple korlátozhatja a fiókot."
+        }
+      },
+      "icloud": {
+        "title": "iCloud",
+        "data": {
+          "scan_interval": "Frissítési időköz",
+          "with_family": "Családi eszközök hozzáadása",
+          "locate": "Helymeghatározás kérése az eszközöktől"
+        },
+        "data_description": {
+          "scan_interval": "Milyen gyakran kérdezzük az iCloudot (2–60 perc)",
+          "locate": "Minden frissítés friss helyzetet kér az eszközöktől, ahogy a Find My app. Kikapcsolva az eszközök által maguktól küldött utolsó helyzetet olvassuk, ami kíméli az akkumulátort."
+        }
+      }
+    }
+  },
+  "selector": {
+    "second_factor": {
+      "options": {
+        "trusted_device": "Megbízható Apple-eszközeim"
+      }
+    }
+  },
+  "exceptions": {
+    "icloud_only": {
+      "message": "{entity} a Find My hálózat tartozéka: csak iCloud-eszközök tudnak hangot lejátszani, üzenetet megjeleníteni vagy Elveszett módot bekapcsolni."
+    },
+    "not_supported": {
+      "message": "{entity} nem támogatja ezt: {action}."
+    },
+    "action_failed": {
+      "message": "Az iCloud elutasította a műveletet: {error}"
+    },
+    "refresh_too_soon": {
+      "message": "Az utolsó frissítés kevesebb mint {seconds} másodperce volt."
+    },
+    "entry_not_loaded": {
+      "message": "Nincs betöltött Find My-fiók ezzel az azonosítóval: {entry}."
+    }
+  },
+  "services": {
+    "play_sound": {
+      "name": "Hang lejátszása",
+      "description": "Megcsörgeti az iCloud-eszközt, néma módban is.",
+      "fields": {
+        "subject": {
+          "name": "Tárgy",
+          "description": "Az eszközön megjelenő figyelmeztetés címe."
+        }
+      }
+    },
+    "display_message": {
+      "name": "Üzenet megjelenítése",
+      "description": "Üzenetet jelenít meg egy iCloud-eszköz képernyőjén.",
+      "fields": {
+        "message": {
+          "name": "Üzenet",
+          "description": "Az eszközön megjelenő szöveg."
+        },
+        "subject": {
+          "name": "Tárgy",
+          "description": "Az üzenet címe."
+        },
+        "sound": {
+          "name": "Hang",
+          "description": "Hangot is lejátszik."
+        }
+      }
+    },
+    "lost_mode": {
+      "name": "Elveszett mód",
+      "description": "Bekapcsolja az Elveszett módot egy iCloud-eszközön: az eszköz zárolódik, és megjeleníti az üzenetet és egy hívható számot.",
+      "fields": {
+        "phone_number": {
+          "name": "Telefonszám",
+          "description": "A szám, amelyet a megtaláló a zárolt eszközről hívhat."
+        },
+        "message": {
+          "name": "Üzenet",
+          "description": "A zárolt eszközön megjelenő szöveg (üresen az Apple alapszövege)."
+        }
+      }
+    },
+    "refresh": {
+      "name": "Frissítés",
+      "description": "Most lekéri a helyzeteket a következő frissítés megvárása helyett.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Fiók",
+          "description": "Csak ez a fiók (üresen az összes fiók)."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,268 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Find My",
+        "menu_options": {
+          "icloud": "iCloud konts (iPhone, iPad, Mac, Apple Watch, AirPods)",
+          "network": "Find My tīkla konts (AirTag un piederumi)"
+        }
+      },
+      "icloud": {
+        "title": "iCloud konts",
+        "description": "Pierakstieties ar Apple kontu, kura ierīces vēlaties sekot.",
+        "data": {
+          "apple_id": "Apple konts",
+          "password": "Parole",
+          "with_family": "Iekļaut ģimenes ierīces"
+        },
+        "data_description": {
+          "with_family": "Pievieno arī to ģimenes locekļu ierīces, kuri ar jums kopīgo savu atrašanās vietu"
+        }
+      },
+      "icloud_code": {
+        "title": "Verifikācijas kods",
+        "description": "Ievadiet verifikācijas kodu, ko Apple nosūtīja uz jūsu uzticamajām Apple ierīcēm vai ar īsziņu. Pēc tam Home Assistant kļūst par uzticamu sesiju, un kods vairs netiek prasīts.",
+        "data": {
+          "code": "Verifikācijas kods"
+        }
+      },
+      "network": {
+        "title": "Find My tīkla konts",
+        "description": "Pierakstieties ar Apple kontu, kam pieder piederumi. To atrašanās vietas tiek iegūtas no Find My tīkla.",
+        "data": {
+          "apple_id": "Apple konts",
+          "password": "Parole"
+        },
+        "sections": {
+          "advanced": {
+            "name": "Papildu opcijas",
+            "description": "Apple atbild tikai klientiem, kas sūta anisette datus. Pēc noklusējuma tie tiek ģenerēti šeit; norādiet sava anisette servera adresi, lai izmantotu to.",
+            "data": {
+              "anisette_url": "Anisette serveris"
+            },
+            "data_description": {
+              "anisette_url": "Piemēram, http://192.168.1.10:6969, tukšs, lai ģenerētu šeit"
+            }
+          }
+        }
+      },
+      "network_method": {
+        "title": "Verifikācijas veids",
+        "description": "Kā Apple jānosūta verifikācijas kods?",
+        "data": {
+          "method": "Sūtīt kodu uz"
+        }
+      },
+      "network_code": {
+        "title": "Verifikācijas kods",
+        "description": "Ievadiet verifikācijas kodu, kas redzams jūsu uzticamajās Apple ierīcēs.",
+        "data": {
+          "code": "Verifikācijas kods"
+        }
+      },
+      "network_sms_code": {
+        "title": "Verifikācijas kods",
+        "description": "Ievadiet verifikācijas kodu, kas nosūtīts ar īsziņu uz {phone}.",
+        "data": {
+          "code": "Verifikācijas kods"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Pierakstīties vēlreiz",
+        "description": "iCloud lūdz {account} pierakstīties vēlreiz. Ievadiet paroli; var sekot verifikācijas kods.",
+        "data": {
+          "password": "Parole"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Nepareizs Apple konts vai parole.",
+      "cannot_connect": "Apple nav sasniedzams. Mēģiniet vēlreiz pēc dažām minūtēm.",
+      "anisette_error": "Pierakstīšanās neizdevās: pārbaudiet, vai anisette serveris atbild, vai atstājiet lauku tukšu.",
+      "code_not_sent": "Apple nenosūtīja verifikācijas kodu. Mēģiniet vēlreiz pēc dažām minūtēm.",
+      "invalid_code": "Nepareizs vai beidzies verifikācijas kods.",
+      "no_second_factor": "Šim Apple kontam nav uzticamas ierīces vai tālruņa numura verifikācijas koda saņemšanai.",
+      "security_key": "Šis Apple konts pierakstās ar drošības atslēgu, kas netiek atbalstīta. Izmantojiet kontu ar verifikācijas kodiem."
+    },
+    "abort": {
+      "already_configured": "Šis konts jau ir pievienots.",
+      "reauth_successful": "Pierakstījāties vēlreiz.",
+      "code_not_sent": "Apple nenosūtīja verifikācijas kodu. Mēģiniet vēlreiz pēc dažām minūtēm.",
+      "wrong_account": "Tas nav šī ieraksta konts: pierakstieties ar to pašu Apple kontu."
+    }
+  },
+  "config_subentries": {
+    "accessory": {
+      "entry_type": "Piederums",
+      "initiate_flow": {
+        "user": "Pievienot piederumus"
+      },
+      "step": {
+        "user": {
+          "title": "Pievienot piederumus",
+          "description": "AirTag un citu piederumu atslēgas glabā lietotne Find My datorā Mac: eksportējiet tās no Mac un pēc tam importējiet šeit.",
+          "menu_options": {
+            "archive": "Visi eksporta piederumi (.zip)",
+            "plist": "Viens piederums (.plist)",
+            "json": "Viens piederums vai atslēgu saraksts (.json)",
+            "key": "Birka ar fiksētu atslēgu"
+          }
+        },
+        "archive": {
+          "title": "Importēt eksportu",
+          "description": "Eksportēto Find My datu zip: tiek pievienots katrs piederums no mapes OwnedBeacons, ar nosaukumu un atslēgu līdzinājumu, ja zip tos satur.",
+          "data": {
+            "file": "Eksports (.zip)"
+          }
+        },
+        "plist": {
+          "title": "Viens piederums",
+          "description": "Piederuma fails no OwnedBeacons un, ja vēlaties, tā fails no KeyAlignmentRecords, kas ievērojami paātrina pirmo iegūšanu sen savienotam piederumam.",
+          "data": {
+            "file": "Piederums (.plist)",
+            "alignment": "Atslēgu līdzinājums (.plist)",
+            "name": "Nosaukums"
+          },
+          "data_description": {
+            "name": "Tukšs, lai izmantotu modeļa nosaukumu"
+          }
+        },
+        "json": {
+          "title": "JSON fails",
+          "description": "JSON formātā eksportēts piederums vai DIY birkas iepriekš ģenerētu privāto atslēgu saraksts.",
+          "data": {
+            "file": "Fails (.json)",
+            "name": "Nosaukums"
+          }
+        },
+        "key": {
+          "title": "Fiksēta atslēga",
+          "description": "DIY birka, kas vienmēr raida to pašu atslēgu.",
+          "data": {
+            "private_key": "Privātā atslēga",
+            "name": "Nosaukums"
+          },
+          "data_description": {
+            "private_key": "Base64 (vai 56 heksadecimālas rakstzīmes)"
+          }
+        }
+      },
+      "error": {
+        "invalid_plist": "Šis fails nav rekvizītu saraksts (.plist).",
+        "encrypted_plist": "Šis fails joprojām ir šifrēts (macOS 14 un jaunāka): eksportējiet to ar rīku, kas atšifrē Find My datus.",
+        "not_an_accessory": "Šis rekvizītu saraksts nav Find My piederums.",
+        "invalid_zip": "Šis fails nav Find My datu zip.",
+        "no_accessory_in_zip": "Nav atrasts neviens piederums: zip jāietver mape OwnedBeacons.",
+        "invalid_json": "Šis fails nav ne piederums, ne atslēgu saraksts.",
+        "invalid_key": "Šī nav privātā atslēga (28 baiti, base64 vai heksadecimāli)."
+      },
+      "abort": {
+        "already_configured": "Šis piederums jau ir pievienots."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Find My tīkls",
+        "data": {
+          "scan_interval": "Atsvaidzināšanas intervāls"
+        },
+        "data_description": {
+          "scan_interval": "Cik bieži tiek iegūtas atrašanās vietas (15 līdz 120 minūtes). Piederumi sūta savu atrašanās vietu aptuveni ik pēc 15 minūtēm: biežāka vaicāšana neko nedod un rada risku, ka Apple ierobežos kontu."
+        }
+      },
+      "icloud": {
+        "title": "iCloud",
+        "data": {
+          "scan_interval": "Atsvaidzināšanas intervāls",
+          "with_family": "Iekļaut ģimenes ierīces",
+          "locate": "Lūgt ierīcēm noteikt atrašanās vietu"
+        },
+        "data_description": {
+          "scan_interval": "Cik bieži tiek vaicāts iCloud (2 līdz 60 minūtes)",
+          "locate": "Katra atsvaidzināšana lūdz ierīcēm jaunu atrašanās vietu, kā to dara lietotne Find My. Izslēgts: tiek nolasīta pēdējā atrašanās vieta, ko ierīces nosūtīja pašas, kas taupa to akumulatoru."
+        }
+      }
+    }
+  },
+  "selector": {
+    "second_factor": {
+      "options": {
+        "trusted_device": "Manas uzticamās Apple ierīces"
+      }
+    }
+  },
+  "exceptions": {
+    "icloud_only": {
+      "message": "{entity} ir Find My tīkla piederums: tikai iCloud ierīces var atskaņot skaņu, parādīt ziņojumu vai ieslēgt režīmu Pazudis."
+    },
+    "not_supported": {
+      "message": "{entity} neatbalsta {action}."
+    },
+    "action_failed": {
+      "message": "iCloud noraidīja darbību: {error}"
+    },
+    "refresh_too_soon": {
+      "message": "Pēdējā atsvaidzināšana bija pirms mazāk nekā {seconds} sekundēm."
+    },
+    "entry_not_loaded": {
+      "message": "Nav ielādēta Find My konta ar ID {entry}."
+    }
+  },
+  "services": {
+    "play_sound": {
+      "name": "Atskaņot skaņu",
+      "description": "Liek iCloud ierīcei atskaņot skaņu, arī klusuma režīmā.",
+      "fields": {
+        "subject": {
+          "name": "Temats",
+          "description": "Ierīcē parādītā brīdinājuma virsraksts."
+        }
+      }
+    },
+    "display_message": {
+      "name": "Parādīt ziņojumu",
+      "description": "Parāda ziņojumu iCloud ierīces ekrānā.",
+      "fields": {
+        "message": {
+          "name": "Ziņojums",
+          "description": "Ierīcē parādītais teksts."
+        },
+        "subject": {
+          "name": "Temats",
+          "description": "Ziņojuma virsraksts."
+        },
+        "sound": {
+          "name": "Skaņa",
+          "description": "Atskaņot arī skaņu."
+        }
+      }
+    },
+    "lost_mode": {
+      "name": "Režīms Pazudis",
+      "description": "Ieslēdz režīmu Pazudis iCloud ierīcē: tā tiek bloķēta un parāda ziņojumu un numuru, uz kuru zvanīt.",
+      "fields": {
+        "phone_number": {
+          "name": "Tālruņa numurs",
+          "description": "Numurs, uz kuru atradējs var zvanīt no bloķētās ierīces."
+        },
+        "message": {
+          "name": "Ziņojums",
+          "description": "Bloķētajā ierīcē parādītais teksts (Apple noklusējuma teksts, ja tukšs)."
+        }
+      }
+    },
+    "refresh": {
+      "name": "Atsvaidzināt",
+      "description": "Iegūst atrašanās vietas tagad, negaidot nākamo atsvaidzināšanu.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Konts",
+          "description": "Tikai šis konts (visi konti, ja tukšs)."
+        }
+      }
+    }
+  }
+}

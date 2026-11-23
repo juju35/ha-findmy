@@ -1,0 +1,268 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Find My",
+        "menu_options": {
+          "icloud": "iCloud-konto (iPhone, iPad, Mac, Apple Watch, AirPods)",
+          "network": "Konto på Find My-netværket (AirTags og tilbehør)"
+        }
+      },
+      "icloud": {
+        "title": "iCloud-konto",
+        "description": "Log ind med den Apple-konto, hvis enheder du vil følge.",
+        "data": {
+          "apple_id": "Apple-konto",
+          "password": "Adgangskode",
+          "with_family": "Medtag familiens enheder"
+        },
+        "data_description": {
+          "with_family": "Tilføj også enheder fra familiemedlemmer, der deler deres placering med dig"
+        }
+      },
+      "icloud_code": {
+        "title": "Bekræftelseskode",
+        "description": "Indtast den bekræftelseskode, Apple har sendt til dine godkendte Apple-enheder eller via sms. Home Assistant bliver derefter en godkendt session og bliver ikke spurgt igen.",
+        "data": {
+          "code": "Bekræftelseskode"
+        }
+      },
+      "network": {
+        "title": "Konto på Find My-netværket",
+        "description": "Log ind med den Apple-konto, tilbehøret tilhører. Deres placeringer hentes fra Find My-netværket.",
+        "data": {
+          "apple_id": "Apple-konto",
+          "password": "Adgangskode"
+        },
+        "sections": {
+          "advanced": {
+            "name": "Avancerede indstillinger",
+            "description": "Apple svarer kun klienter, der sender anisette-data. Som standard genereres de her; angiv adressen på din egen anisette-server for at bruge den i stedet.",
+            "data": {
+              "anisette_url": "Anisette-server"
+            },
+            "data_description": {
+              "anisette_url": "For eksempel http://192.168.1.10:6969, tom for at generere dem her"
+            }
+          }
+        }
+      },
+      "network_method": {
+        "title": "Bekræftelsesmetode",
+        "description": "Hvordan skal Apple sende bekræftelseskoden?",
+        "data": {
+          "method": "Send koden til"
+        }
+      },
+      "network_code": {
+        "title": "Bekræftelseskode",
+        "description": "Indtast bekræftelseskoden, der vises på dine godkendte Apple-enheder.",
+        "data": {
+          "code": "Bekræftelseskode"
+        }
+      },
+      "network_sms_code": {
+        "title": "Bekræftelseskode",
+        "description": "Indtast bekræftelseskoden, der er sendt via sms til {phone}.",
+        "data": {
+          "code": "Bekræftelseskode"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Log ind igen",
+        "description": "iCloud beder {account} om at logge ind igen. Indtast adgangskoden; en bekræftelseskode kan følge.",
+        "data": {
+          "password": "Adgangskode"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Forkert Apple-konto eller adgangskode.",
+      "cannot_connect": "Apple kan ikke nås. Prøv igen om et par minutter.",
+      "anisette_error": "Login mislykkedes: kontrollér, at anisette-serveren svarer, eller lad feltet stå tomt.",
+      "code_not_sent": "Apple sendte ingen bekræftelseskode. Prøv igen om et par minutter.",
+      "invalid_code": "Forkert eller udløbet bekræftelseskode.",
+      "no_second_factor": "Denne Apple-konto har ingen godkendt enhed eller telefonnummer til at modtage en bekræftelseskode.",
+      "security_key": "Denne Apple-konto logger ind med en sikkerhedsnøgle, hvilket ikke understøttes. Brug en konto med bekræftelseskoder."
+    },
+    "abort": {
+      "already_configured": "Denne konto er allerede tilføjet.",
+      "reauth_successful": "Logget ind igen.",
+      "code_not_sent": "Apple sendte ingen bekræftelseskode. Prøv igen om et par minutter.",
+      "wrong_account": "Dette er ikke kontoen for denne post: log ind med den samme Apple-konto."
+    }
+  },
+  "config_subentries": {
+    "accessory": {
+      "entry_type": "Tilbehør",
+      "initiate_flow": {
+        "user": "Tilføj tilbehør"
+      },
+      "step": {
+        "user": {
+          "title": "Tilføj tilbehør",
+          "description": "Nøglerne til AirTags og andet tilbehør opbevares af appen Find My på en Mac: eksportér dem fra Mac'en, og importér dem derefter her.",
+          "menu_options": {
+            "archive": "Alt tilbehør fra en eksport (.zip)",
+            "plist": "Ét tilbehør (.plist)",
+            "json": "Ét tilbehør eller en liste med nøgler (.json)",
+            "key": "Et tag med fast nøgle"
+          }
+        },
+        "archive": {
+          "title": "Importér en eksport",
+          "description": "En zip med de eksporterede Find My-data: hvert tilbehør i mappen OwnedBeacons tilføjes med navn og nøglejustering, når zip-filen indeholder dem.",
+          "data": {
+            "file": "Eksport (.zip)"
+          }
+        },
+        "plist": {
+          "title": "Ét tilbehør",
+          "description": "Tilbehørets fil fra OwnedBeacons og eventuelt dets fil fra KeyAlignmentRecords, som gør den første hentning meget hurtigere for tilbehør, der blev parret for længe siden.",
+          "data": {
+            "file": "Tilbehør (.plist)",
+            "alignment": "Nøglejustering (.plist)",
+            "name": "Navn"
+          },
+          "data_description": {
+            "name": "Tom for at bruge modelnavnet"
+          }
+        },
+        "json": {
+          "title": "JSON-fil",
+          "description": "Et tilbehør eksporteret som JSON eller en liste med forudgenererede private nøgler til et DIY-tag.",
+          "data": {
+            "file": "Fil (.json)",
+            "name": "Navn"
+          }
+        },
+        "key": {
+          "title": "Fast nøgle",
+          "description": "Et DIY-tag, der altid udsender den samme nøgle.",
+          "data": {
+            "private_key": "Privat nøgle",
+            "name": "Navn"
+          },
+          "data_description": {
+            "private_key": "Base64 (eller 56 hexadecimale tegn)"
+          }
+        }
+      },
+      "error": {
+        "invalid_plist": "Denne fil er ikke en property list (.plist).",
+        "encrypted_plist": "Denne fil er stadig krypteret (macOS 14 og nyere): eksportér den med et værktøj, der dekrypterer Find My-dataene.",
+        "not_an_accessory": "Denne property list er ikke et Find My-tilbehør.",
+        "invalid_zip": "Denne fil er ikke en zip med Find My-data.",
+        "no_accessory_in_zip": "Intet tilbehør fundet: zip-filen skal indeholde mappen OwnedBeacons.",
+        "invalid_json": "Denne fil er hverken et tilbehør eller en liste med nøgler.",
+        "invalid_key": "Dette er ikke en privat nøgle (28 byte, i base64 eller hexadecimal)."
+      },
+      "abort": {
+        "already_configured": "Dette tilbehør er allerede tilføjet."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Find My-netværket",
+        "data": {
+          "scan_interval": "Opdateringsinterval"
+        },
+        "data_description": {
+          "scan_interval": "Hvor ofte placeringer hentes (15 til 120 minutter). Tilbehør sender sin position cirka hvert 15. minut: at spørge oftere giver intet og risikerer, at Apple begrænser kontoen."
+        }
+      },
+      "icloud": {
+        "title": "iCloud",
+        "data": {
+          "scan_interval": "Opdateringsinterval",
+          "with_family": "Medtag familiens enheder",
+          "locate": "Bed enhederne om at finde sig selv"
+        },
+        "data_description": {
+          "scan_interval": "Hvor ofte iCloud forespørges (2 til 60 minutter)",
+          "locate": "Hver opdatering beder enhederne om en ny position, som appen Find My gør. Slået fra læses den seneste position, enhederne selv har sendt, hvilket skåner deres batteri."
+        }
+      }
+    }
+  },
+  "selector": {
+    "second_factor": {
+      "options": {
+        "trusted_device": "Mine godkendte Apple-enheder"
+      }
+    }
+  },
+  "exceptions": {
+    "icloud_only": {
+      "message": "{entity} er tilbehør på Find My-netværket: kun iCloud-enheder kan afspille en lyd, vise en besked eller aktivere tilstanden Mistet."
+    },
+    "not_supported": {
+      "message": "{entity} understøtter ikke {action}."
+    },
+    "action_failed": {
+      "message": "iCloud afviste handlingen: {error}"
+    },
+    "refresh_too_soon": {
+      "message": "Den seneste opdatering var for mindre end {seconds} sekunder siden."
+    },
+    "entry_not_loaded": {
+      "message": "Ingen indlæst Find My-konto med ID'et {entry}."
+    }
+  },
+  "services": {
+    "play_sound": {
+      "name": "Afspil lyd",
+      "description": "Får en iCloud-enhed til at afspille en lyd, også på lydløs.",
+      "fields": {
+        "subject": {
+          "name": "Emne",
+          "description": "Titel på advarslen, der vises på enheden."
+        }
+      }
+    },
+    "display_message": {
+      "name": "Vis besked",
+      "description": "Viser en besked på skærmen af en iCloud-enhed.",
+      "fields": {
+        "message": {
+          "name": "Besked",
+          "description": "Tekst, der vises på enheden."
+        },
+        "subject": {
+          "name": "Emne",
+          "description": "Beskedens titel."
+        },
+        "sound": {
+          "name": "Lyd",
+          "description": "Afspil også en lyd."
+        }
+      }
+    },
+    "lost_mode": {
+      "name": "Tilstanden Mistet",
+      "description": "Aktiverer tilstanden Mistet på en iCloud-enhed: den låses og viser beskeden og et nummer at ringe til.",
+      "fields": {
+        "phone_number": {
+          "name": "Telefonnummer",
+          "description": "Nummer, finderen kan ringe til fra den låste enhed."
+        },
+        "message": {
+          "name": "Besked",
+          "description": "Tekst, der vises på den låste enhed (Apples standardtekst, hvis tom)."
+        }
+      }
+    },
+    "refresh": {
+      "name": "Opdater",
+      "description": "Henter placeringerne nu i stedet for at vente på næste opdatering.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Konto",
+          "description": "Kun denne konto (alle konti, hvis tom)."
+        }
+      }
+    }
+  }
+}

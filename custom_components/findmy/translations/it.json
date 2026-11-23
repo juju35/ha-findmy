@@ -1,0 +1,268 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Find My",
+        "menu_options": {
+          "icloud": "Account iCloud (iPhone, iPad, Mac, Apple Watch, AirPods)",
+          "network": "Account della rete Find My (AirTag e accessori)"
+        }
+      },
+      "icloud": {
+        "title": "Account iCloud",
+        "description": "Accedi con l'account Apple di cui vuoi seguire i dispositivi.",
+        "data": {
+          "apple_id": "Account Apple",
+          "password": "Password",
+          "with_family": "Includi i dispositivi della famiglia"
+        },
+        "data_description": {
+          "with_family": "Aggiunge anche i dispositivi dei familiari che condividono la loro posizione con te"
+        }
+      },
+      "icloud_code": {
+        "title": "Codice di verifica",
+        "description": "Inserisci il codice di verifica che Apple ha inviato ai tuoi dispositivi Apple attendibili o via SMS. Home Assistant diventa una sessione attendibile e non viene più richiesto.",
+        "data": {
+          "code": "Codice di verifica"
+        }
+      },
+      "network": {
+        "title": "Account della rete Find My",
+        "description": "Accedi con l'account Apple a cui appartengono gli accessori. Le loro posizioni vengono recuperate dalla rete Find My.",
+        "data": {
+          "apple_id": "Account Apple",
+          "password": "Password"
+        },
+        "sections": {
+          "advanced": {
+            "name": "Opzioni avanzate",
+            "description": "Apple risponde solo ai client che inviano dati anisette. Per impostazione predefinita vengono generati qui; indica l'indirizzo del tuo server anisette per usarlo al loro posto.",
+            "data": {
+              "anisette_url": "Server anisette"
+            },
+            "data_description": {
+              "anisette_url": "Ad esempio http://192.168.1.10:6969, vuoto per generarli qui"
+            }
+          }
+        }
+      },
+      "network_method": {
+        "title": "Metodo di verifica",
+        "description": "Come deve inviare Apple il codice di verifica?",
+        "data": {
+          "method": "Invia il codice a"
+        }
+      },
+      "network_code": {
+        "title": "Codice di verifica",
+        "description": "Inserisci il codice di verifica mostrato sui tuoi dispositivi Apple attendibili.",
+        "data": {
+          "code": "Codice di verifica"
+        }
+      },
+      "network_sms_code": {
+        "title": "Codice di verifica",
+        "description": "Inserisci il codice di verifica inviato via SMS al {phone}.",
+        "data": {
+          "code": "Codice di verifica"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Accedi di nuovo",
+        "description": "iCloud chiede a {account} di accedere di nuovo. Inserisci la password; può seguire un codice di verifica.",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Account Apple o password errati.",
+      "cannot_connect": "Impossibile raggiungere Apple. Riprova tra qualche minuto.",
+      "anisette_error": "Accesso non riuscito: verifica che il server anisette risponda, oppure lascialo vuoto.",
+      "code_not_sent": "Apple non ha inviato un codice di verifica. Riprova tra qualche minuto.",
+      "invalid_code": "Codice di verifica errato o scaduto.",
+      "no_second_factor": "Questo account Apple non ha né un dispositivo attendibile né un numero di telefono per ricevere un codice di verifica.",
+      "security_key": "Questo account Apple accede con una chiave di sicurezza, che non è supportata. Usa un account con codici di verifica."
+    },
+    "abort": {
+      "already_configured": "Questo account è già stato aggiunto.",
+      "reauth_successful": "Accesso di nuovo eseguito.",
+      "code_not_sent": "Apple non ha inviato un codice di verifica. Riprova tra qualche minuto.",
+      "wrong_account": "Non è l'account di questa voce: accedi con lo stesso account Apple."
+    }
+  },
+  "config_subentries": {
+    "accessory": {
+      "entry_type": "Accessorio",
+      "initiate_flow": {
+        "user": "Aggiungi accessori"
+      },
+      "step": {
+        "user": {
+          "title": "Aggiungi accessori",
+          "description": "Le chiavi degli AirTag e degli altri accessori sono conservate dall'app Find My di un Mac: esportale dal Mac, poi importale qui.",
+          "menu_options": {
+            "archive": "Tutti gli accessori di un'esportazione (.zip)",
+            "plist": "Un accessorio (.plist)",
+            "json": "Un accessorio o un elenco di chiavi (.json)",
+            "key": "Un tag con chiave fissa"
+          }
+        },
+        "archive": {
+          "title": "Importa un'esportazione",
+          "description": "Uno zip dei dati Find My esportati: viene aggiunto ogni accessorio della cartella OwnedBeacons, con il nome e l'allineamento delle chiavi quando lo zip li contiene.",
+          "data": {
+            "file": "Esportazione (.zip)"
+          }
+        },
+        "plist": {
+          "title": "Un accessorio",
+          "description": "Il file dell'accessorio in OwnedBeacons e, facoltativamente, il suo file in KeyAlignmentRecords, che rende molto più veloce il primo recupero per un accessorio abbinato tempo fa.",
+          "data": {
+            "file": "Accessorio (.plist)",
+            "alignment": "Allineamento delle chiavi (.plist)",
+            "name": "Nome"
+          },
+          "data_description": {
+            "name": "Vuoto per usare il nome del modello"
+          }
+        },
+        "json": {
+          "title": "File JSON",
+          "description": "Un accessorio esportato in JSON, o un elenco di chiavi private pregenerate di un tag DIY.",
+          "data": {
+            "file": "File (.json)",
+            "name": "Nome"
+          }
+        },
+        "key": {
+          "title": "Chiave fissa",
+          "description": "Un tag DIY che trasmette sempre la stessa chiave.",
+          "data": {
+            "private_key": "Chiave privata",
+            "name": "Nome"
+          },
+          "data_description": {
+            "private_key": "Base64 (o 56 caratteri esadecimali)"
+          }
+        }
+      },
+      "error": {
+        "invalid_plist": "Questo file non è un elenco di proprietà (.plist).",
+        "encrypted_plist": "Questo file è ancora cifrato (macOS 14 e successivi): esportalo con uno strumento che decifra i dati Find My.",
+        "not_an_accessory": "Questo elenco di proprietà non è un accessorio Find My.",
+        "invalid_zip": "Questo file non è uno zip dei dati Find My.",
+        "no_accessory_in_zip": "Nessun accessorio trovato: lo zip deve contenere la cartella OwnedBeacons.",
+        "invalid_json": "Questo file non è un accessorio né un elenco di chiavi.",
+        "invalid_key": "Non è una chiave privata (28 byte, in base64 o esadecimale)."
+      },
+      "abort": {
+        "already_configured": "Questo accessorio è già stato aggiunto."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Rete Find My",
+        "data": {
+          "scan_interval": "Intervallo di aggiornamento"
+        },
+        "data_description": {
+          "scan_interval": "Ogni quanto vengono recuperate le posizioni (da 15 a 120 minuti). Gli accessori inviano la loro posizione circa ogni 15 minuti: chiedere più spesso non serve e rischia che Apple limiti l'account."
+        }
+      },
+      "icloud": {
+        "title": "iCloud",
+        "data": {
+          "scan_interval": "Intervallo di aggiornamento",
+          "with_family": "Includi i dispositivi della famiglia",
+          "locate": "Chiedi ai dispositivi di localizzarsi"
+        },
+        "data_description": {
+          "scan_interval": "Ogni quanto viene interrogato iCloud (da 2 a 60 minuti)",
+          "locate": "Ogni aggiornamento chiede ai dispositivi una posizione nuova, come l'app Find My. Disattivato, viene letta l'ultima posizione inviata spontaneamente dai dispositivi, risparmiando la loro batteria."
+        }
+      }
+    }
+  },
+  "selector": {
+    "second_factor": {
+      "options": {
+        "trusted_device": "I miei dispositivi Apple attendibili"
+      }
+    }
+  },
+  "exceptions": {
+    "icloud_only": {
+      "message": "{entity} è un accessorio della rete Find My: solo i dispositivi iCloud possono suonare, mostrare un messaggio o attivare la modalità Smarrito."
+    },
+    "not_supported": {
+      "message": "{entity} non supporta {action}."
+    },
+    "action_failed": {
+      "message": "iCloud ha rifiutato l'azione: {error}"
+    },
+    "refresh_too_soon": {
+      "message": "L'ultimo aggiornamento risale a meno di {seconds} secondi fa."
+    },
+    "entry_not_loaded": {
+      "message": "Nessun account Find My caricato con l'ID {entry}."
+    }
+  },
+  "services": {
+    "play_sound": {
+      "name": "Riproduci suono",
+      "description": "Fa suonare un dispositivo iCloud, anche in modalità silenziosa.",
+      "fields": {
+        "subject": {
+          "name": "Oggetto",
+          "description": "Titolo dell'avviso mostrato sul dispositivo."
+        }
+      }
+    },
+    "display_message": {
+      "name": "Mostra messaggio",
+      "description": "Mostra un messaggio sullo schermo di un dispositivo iCloud.",
+      "fields": {
+        "message": {
+          "name": "Messaggio",
+          "description": "Testo mostrato sul dispositivo."
+        },
+        "subject": {
+          "name": "Oggetto",
+          "description": "Titolo del messaggio."
+        },
+        "sound": {
+          "name": "Suono",
+          "description": "Riproduce anche un suono."
+        }
+      }
+    },
+    "lost_mode": {
+      "name": "Modalità Smarrito",
+      "description": "Attiva la modalità Smarrito su un dispositivo iCloud: si blocca e mostra il messaggio e un numero da chiamare.",
+      "fields": {
+        "phone_number": {
+          "name": "Numero di telefono",
+          "description": "Numero che chi lo trova può chiamare dal dispositivo bloccato."
+        },
+        "message": {
+          "name": "Messaggio",
+          "description": "Testo mostrato sul dispositivo bloccato (testo predefinito di Apple se vuoto)."
+        }
+      }
+    },
+    "refresh": {
+      "name": "Aggiorna",
+      "description": "Recupera le posizioni ora invece di attendere il prossimo aggiornamento.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Account",
+          "description": "Solo questo account (tutti gli account se vuoto)."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Find My",
+  "content_in_root": false,
+  "render_readme": true,
+  "zip_release": true,
+  "filename": "findmy.zip",
+  "homeassistant": "2026.6.0"
+}

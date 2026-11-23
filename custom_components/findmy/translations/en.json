@@ -1,0 +1,327 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Find My",
+        "menu_options": {
+          "icloud": "iCloud account (iPhone, iPad, Mac, Apple Watch, AirPods)",
+          "network": "Find My network account (AirTags and accessories)"
+        }
+      },
+      "icloud": {
+        "title": "iCloud account",
+        "description": "Sign in with the Apple Account whose devices you want to follow.",
+        "data": {
+          "apple_id": "Apple Account",
+          "password": "Password",
+          "with_family": "Include family devices"
+        },
+        "data_description": {
+          "with_family": "Also add the devices of the family members who share their location with you"
+        }
+      },
+      "icloud_code": {
+        "title": "Verification code",
+        "description": "Enter the verification code Apple sent to your trusted Apple devices or by text message. Home Assistant then becomes a trusted session and is not asked again.",
+        "data": {
+          "code": "Verification code"
+        }
+      },
+      "network": {
+        "title": "Find My network account",
+        "description": "Sign in with the Apple Account the accessories belong to. Their location reports are fetched from the Find My network.",
+        "data": {
+          "apple_id": "Apple Account",
+          "password": "Password"
+        },
+        "sections": {
+          "advanced": {
+            "name": "Advanced options",
+            "description": "Apple only answers clients that send anisette data. It is generated here by default; give the address of your own anisette server to use it instead.",
+            "data": {
+              "anisette_url": "Anisette server"
+            },
+            "data_description": {
+              "anisette_url": "For example http://192.168.1.10:6969, empty to generate it here"
+            }
+          }
+        }
+      },
+      "network_method": {
+        "title": "Verification method",
+        "description": "How should Apple send the verification code?",
+        "data": {
+          "method": "Send the code to"
+        }
+      },
+      "network_code": {
+        "title": "Verification code",
+        "description": "Enter the verification code shown on your trusted Apple devices.",
+        "data": {
+          "code": "Verification code"
+        }
+      },
+      "network_sms_code": {
+        "title": "Verification code",
+        "description": "Enter the verification code sent by text message to {phone}.",
+        "data": {
+          "code": "Verification code"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Sign in again",
+        "description": "iCloud asks {account} to sign in again. Enter the password; a verification code may follow.",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Wrong Apple Account or password.",
+      "cannot_connect": "Apple could not be reached. Try again in a few minutes.",
+      "anisette_error": "Signing in failed: check that the anisette server answers, or leave it empty.",
+      "code_not_sent": "Apple did not send a verification code. Try again in a few minutes.",
+      "invalid_code": "Wrong or expired verification code.",
+      "no_second_factor": "This Apple Account has no trusted device or phone number to receive a verification code.",
+      "security_key": "This Apple Account signs in with a security key, which is not supported. Use an account with verification codes."
+    },
+    "abort": {
+      "already_configured": "This account is already added.",
+      "reauth_successful": "Signed in again.",
+      "code_not_sent": "Apple did not send a verification code. Try again in a few minutes.",
+      "wrong_account": "This is not the account of this entry: sign in with the same Apple Account."
+    }
+  },
+  "config_subentries": {
+    "accessory": {
+      "entry_type": "Accessory",
+      "initiate_flow": {
+        "user": "Add accessories"
+      },
+      "step": {
+        "user": {
+          "title": "Add accessories",
+          "description": "The keys of AirTags and other accessories are kept by the Find My app on a Mac: export them from the Mac, then import them here.",
+          "menu_options": {
+            "archive": "Every accessory from an export (.zip)",
+            "plist": "One accessory (.plist)",
+            "json": "One accessory or a list of keys (.json)",
+            "key": "A tag with a static key"
+          }
+        },
+        "archive": {
+          "title": "Import an export",
+          "description": "A zip of the exported Find My data: every accessory of its OwnedBeacons folder is added, with its name and key alignment when the zip has them.",
+          "data": {
+            "file": "Export (.zip)"
+          }
+        },
+        "plist": {
+          "title": "One accessory",
+          "description": "The accessory's file from OwnedBeacons and, optionally, its file from KeyAlignmentRecords, which makes the first fetch much faster for an accessory paired long ago.",
+          "data": {
+            "file": "Accessory (.plist)",
+            "alignment": "Key alignment (.plist)",
+            "name": "Name"
+          },
+          "data_description": {
+            "name": "Empty to use the model name"
+          }
+        },
+        "json": {
+          "title": "JSON file",
+          "description": "An accessory exported as JSON, or a list of pre-generated private keys of a DIY tag.",
+          "data": {
+            "file": "File (.json)",
+            "name": "Name"
+          }
+        },
+        "key": {
+          "title": "Static key",
+          "description": "A DIY tag that always broadcasts the same key.",
+          "data": {
+            "private_key": "Private key",
+            "name": "Name"
+          },
+          "data_description": {
+            "private_key": "Base64 (or 56 hexadecimal characters)"
+          }
+        }
+      },
+      "error": {
+        "invalid_plist": "This file is not a property list (.plist).",
+        "encrypted_plist": "This file is still encrypted (macOS 14 and later): export it with a tool that decrypts the Find My data.",
+        "not_an_accessory": "This property list is not a Find My accessory.",
+        "invalid_zip": "This file is not a zip of the Find My data.",
+        "no_accessory_in_zip": "No accessory found: the zip should contain the OwnedBeacons folder.",
+        "invalid_json": "This file is not an accessory or a list of keys.",
+        "invalid_key": "This is not a private key (28 bytes, in base64 or hexadecimal)."
+      },
+      "abort": {
+        "already_configured": "This accessory is already added."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Find My network",
+        "data": {
+          "scan_interval": "Refresh interval"
+        },
+        "data_description": {
+          "scan_interval": "How often location reports are fetched (15 to 120 minutes). Accessories upload their position about every 15 minutes: asking more often brings nothing and risks Apple throttling the account."
+        }
+      },
+      "icloud": {
+        "title": "iCloud",
+        "data": {
+          "scan_interval": "Refresh interval",
+          "with_family": "Include family devices",
+          "locate": "Ask the devices to locate themselves"
+        },
+        "data_description": {
+          "scan_interval": "How often iCloud is asked (2 to 60 minutes)",
+          "locate": "Each refresh asks the devices for a fresh position, as the Find My app does. Off, the last position the devices sent on their own is read, which spares their battery."
+        }
+      }
+    }
+  },
+  "selector": {
+    "second_factor": {
+      "options": {
+        "trusted_device": "My trusted Apple devices"
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "battery_low": {
+        "name": "Battery low"
+      },
+      "charging": {
+        "name": "Charging"
+      },
+      "lost": {
+        "name": "Lost mode"
+      },
+      "fetch_problem": {
+        "name": "Fetch problem"
+      }
+    },
+    "button": {
+      "play_sound": {
+        "name": "Play sound"
+      },
+      "refresh": {
+        "name": "Refresh"
+      }
+    },
+    "device_tracker": {
+      "location": {
+        "name": "Location"
+      }
+    },
+    "sensor": {
+      "battery": {
+        "name": "Battery"
+      },
+      "battery_state": {
+        "name": "Battery state",
+        "state": {
+          "full": "Full",
+          "medium": "Medium",
+          "low": "Low",
+          "critical": "Critical"
+        }
+      },
+      "last_seen": {
+        "name": "Last seen"
+      },
+      "status": {
+        "name": "Status",
+        "state": {
+          "online": "Online",
+          "offline": "Offline",
+          "pending": "Pending",
+          "unregistered": "Unregistered",
+          "unknown": "Unknown"
+        }
+      },
+      "last_fetch": {
+        "name": "Last fetch"
+      }
+    }
+  },
+  "exceptions": {
+    "icloud_only": {
+      "message": "{entity} is a Find My network accessory: only iCloud devices can ring, show a message or turn on Lost Mode."
+    },
+    "not_supported": {
+      "message": "{entity} does not support {action}."
+    },
+    "action_failed": {
+      "message": "iCloud refused the action: {error}"
+    },
+    "refresh_too_soon": {
+      "message": "The last refresh was less than {seconds} seconds ago."
+    },
+    "entry_not_loaded": {
+      "message": "No loaded Find My account with the ID {entry}."
+    }
+  },
+  "services": {
+    "play_sound": {
+      "name": "Play sound",
+      "description": "Makes an iCloud device ring, even on silent.",
+      "fields": {
+        "subject": {
+          "name": "Subject",
+          "description": "Title of the alert shown on the device."
+        }
+      }
+    },
+    "display_message": {
+      "name": "Display message",
+      "description": "Shows a message on the screen of an iCloud device.",
+      "fields": {
+        "message": {
+          "name": "Message",
+          "description": "Text shown on the device."
+        },
+        "subject": {
+          "name": "Subject",
+          "description": "Title of the message."
+        },
+        "sound": {
+          "name": "Sound",
+          "description": "Also play a sound."
+        }
+      }
+    },
+    "lost_mode": {
+      "name": "Lost mode",
+      "description": "Turns on Lost Mode on an iCloud device: it locks and shows the message and a number to call.",
+      "fields": {
+        "phone_number": {
+          "name": "Phone number",
+          "description": "Number the finder can call from the locked device."
+        },
+        "message": {
+          "name": "Message",
+          "description": "Text shown on the locked device (Apple's default text when empty)."
+        }
+      }
+    },
+    "refresh": {
+      "name": "Refresh",
+      "description": "Fetches the positions now instead of waiting for the next refresh.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Account",
+          "description": "Only this account (every account when empty)."
+        }
+      }
+    }
+  }
+}

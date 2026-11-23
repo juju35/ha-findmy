@@ -1,0 +1,14 @@
+{
+  "domain": "findmy",
+  "name": "Find My",
+  "codeowners": ["@juju35"],
+  "config_flow": true,
+  "dependencies": ["file_upload"],
+  "documentation": "https://github.com/juju35/ha-findmy",
+  "integration_type": "hub",
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://github.com/juju35/ha-findmy/issues",
+  "loggers": ["findmy", "pyicloud"],
+  "requirements": ["findmy>=0.10.2", "pyicloud>=2.7.0"],
+  "version": "1.0.0"
+}

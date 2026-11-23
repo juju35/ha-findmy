@@ -1,0 +1,268 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Find My",
+        "menu_options": {
+          "icloud": "Konto iCloud (iPhone, iPad, Mac, Apple Watch, AirPods)",
+          "network": "Konto sieci Find My (AirTagi i akcesoria)"
+        }
+      },
+      "icloud": {
+        "title": "Konto iCloud",
+        "description": "Zaloguj się kontem Apple, którego urządzenia chcesz śledzić.",
+        "data": {
+          "apple_id": "Konto Apple",
+          "password": "Hasło",
+          "with_family": "Uwzględnij urządzenia rodziny"
+        },
+        "data_description": {
+          "with_family": "Dodaje też urządzenia członków rodziny, którzy udostępniają Ci swoją lokalizację"
+        }
+      },
+      "icloud_code": {
+        "title": "Kod weryfikacyjny",
+        "description": "Wpisz kod weryfikacyjny, który Apple wysłał na Twoje zaufane urządzenia Apple lub SMS-em. Home Assistant staje się wtedy zaufaną sesją i kod nie będzie ponownie wymagany.",
+        "data": {
+          "code": "Kod weryfikacyjny"
+        }
+      },
+      "network": {
+        "title": "Konto sieci Find My",
+        "description": "Zaloguj się kontem Apple, do którego należą akcesoria. Ich lokalizacje są pobierane z sieci Find My.",
+        "data": {
+          "apple_id": "Konto Apple",
+          "password": "Hasło"
+        },
+        "sections": {
+          "advanced": {
+            "name": "Opcje zaawansowane",
+            "description": "Apple odpowiada tylko klientom wysyłającym dane anisette. Domyślnie są generowane tutaj; podaj adres własnego serwera anisette, aby go użyć.",
+            "data": {
+              "anisette_url": "Serwer anisette"
+            },
+            "data_description": {
+              "anisette_url": "Na przykład http://192.168.1.10:6969, puste, aby generować je tutaj"
+            }
+          }
+        }
+      },
+      "network_method": {
+        "title": "Metoda weryfikacji",
+        "description": "Jak Apple ma wysłać kod weryfikacyjny?",
+        "data": {
+          "method": "Wyślij kod na"
+        }
+      },
+      "network_code": {
+        "title": "Kod weryfikacyjny",
+        "description": "Wpisz kod weryfikacyjny wyświetlony na Twoich zaufanych urządzeniach Apple.",
+        "data": {
+          "code": "Kod weryfikacyjny"
+        }
+      },
+      "network_sms_code": {
+        "title": "Kod weryfikacyjny",
+        "description": "Wpisz kod weryfikacyjny wysłany SMS-em na numer {phone}.",
+        "data": {
+          "code": "Kod weryfikacyjny"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Zaloguj się ponownie",
+        "description": "iCloud prosi {account} o ponowne zalogowanie. Wpisz hasło; może pojawić się kod weryfikacyjny.",
+        "data": {
+          "password": "Hasło"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Nieprawidłowe konto Apple lub hasło.",
+      "cannot_connect": "Nie można połączyć się z Apple. Spróbuj ponownie za kilka minut.",
+      "anisette_error": "Logowanie nie powiodło się: sprawdź, czy serwer anisette odpowiada, lub zostaw pole puste.",
+      "code_not_sent": "Apple nie wysłał kodu weryfikacyjnego. Spróbuj ponownie za kilka minut.",
+      "invalid_code": "Nieprawidłowy lub wygasły kod weryfikacyjny.",
+      "no_second_factor": "To konto Apple nie ma zaufanego urządzenia ani numeru telefonu do odbioru kodu weryfikacyjnego.",
+      "security_key": "To konto Apple loguje się kluczem bezpieczeństwa, który nie jest obsługiwany. Użyj konta z kodami weryfikacyjnymi."
+    },
+    "abort": {
+      "already_configured": "To konto jest już dodane.",
+      "reauth_successful": "Zalogowano ponownie.",
+      "code_not_sent": "Apple nie wysłał kodu weryfikacyjnego. Spróbuj ponownie za kilka minut.",
+      "wrong_account": "To nie jest konto tego wpisu: zaloguj się tym samym kontem Apple."
+    }
+  },
+  "config_subentries": {
+    "accessory": {
+      "entry_type": "Akcesorium",
+      "initiate_flow": {
+        "user": "Dodaj akcesoria"
+      },
+      "step": {
+        "user": {
+          "title": "Dodaj akcesoria",
+          "description": "Klucze AirTagów i innych akcesoriów przechowuje aplikacja Find My na Macu: wyeksportuj je z Maca, a następnie zaimportuj tutaj.",
+          "menu_options": {
+            "archive": "Wszystkie akcesoria z eksportu (.zip)",
+            "plist": "Jedno akcesorium (.plist)",
+            "json": "Jedno akcesorium lub lista kluczy (.json)",
+            "key": "Znacznik ze stałym kluczem"
+          }
+        },
+        "archive": {
+          "title": "Importuj eksport",
+          "description": "Plik zip z wyeksportowanymi danymi Find My: dodawane jest każde akcesorium z folderu OwnedBeacons, z nazwą i wyrównaniem kluczy, jeśli zip je zawiera.",
+          "data": {
+            "file": "Eksport (.zip)"
+          }
+        },
+        "plist": {
+          "title": "Jedno akcesorium",
+          "description": "Plik akcesorium z OwnedBeacons i opcjonalnie jego plik z KeyAlignmentRecords, który znacznie przyspiesza pierwsze pobranie dla akcesorium sparowanego dawno temu.",
+          "data": {
+            "file": "Akcesorium (.plist)",
+            "alignment": "Wyrównanie kluczy (.plist)",
+            "name": "Nazwa"
+          },
+          "data_description": {
+            "name": "Puste, aby użyć nazwy modelu"
+          }
+        },
+        "json": {
+          "title": "Plik JSON",
+          "description": "Akcesorium wyeksportowane jako JSON lub lista wstępnie wygenerowanych kluczy prywatnych znacznika DIY.",
+          "data": {
+            "file": "Plik (.json)",
+            "name": "Nazwa"
+          }
+        },
+        "key": {
+          "title": "Stały klucz",
+          "description": "Znacznik DIY, który zawsze nadaje ten sam klucz.",
+          "data": {
+            "private_key": "Klucz prywatny",
+            "name": "Nazwa"
+          },
+          "data_description": {
+            "private_key": "Base64 (lub 56 znaków szesnastkowych)"
+          }
+        }
+      },
+      "error": {
+        "invalid_plist": "Ten plik nie jest listą właściwości (.plist).",
+        "encrypted_plist": "Ten plik jest nadal zaszyfrowany (macOS 14 i nowsze): wyeksportuj go narzędziem, które odszyfrowuje dane Find My.",
+        "not_an_accessory": "Ta lista właściwości nie jest akcesorium Find My.",
+        "invalid_zip": "Ten plik nie jest plikiem zip z danymi Find My.",
+        "no_accessory_in_zip": "Nie znaleziono akcesorium: zip musi zawierać folder OwnedBeacons.",
+        "invalid_json": "Ten plik nie jest akcesorium ani listą kluczy.",
+        "invalid_key": "To nie jest klucz prywatny (28 bajtów, w base64 lub szesnastkowo)."
+      },
+      "abort": {
+        "already_configured": "To akcesorium jest już dodane."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Sieć Find My",
+        "data": {
+          "scan_interval": "Interwał odświeżania"
+        },
+        "data_description": {
+          "scan_interval": "Jak często pobierane są lokalizacje (od 15 do 120 minut). Akcesoria wysyłają swoją pozycję mniej więcej co 15 minut: częstsze pytanie nic nie daje i grozi ograniczeniem konta przez Apple."
+        }
+      },
+      "icloud": {
+        "title": "iCloud",
+        "data": {
+          "scan_interval": "Interwał odświeżania",
+          "with_family": "Uwzględnij urządzenia rodziny",
+          "locate": "Proś urządzenia o zlokalizowanie się"
+        },
+        "data_description": {
+          "scan_interval": "Jak często odpytywany jest iCloud (od 2 do 60 minut)",
+          "locate": "Każde odświeżenie prosi urządzenia o świeżą pozycję, tak jak aplikacja Find My. Wyłączone: odczytywana jest ostatnia pozycja wysłana przez urządzenia samodzielnie, co oszczędza baterię."
+        }
+      }
+    }
+  },
+  "selector": {
+    "second_factor": {
+      "options": {
+        "trusted_device": "Moje zaufane urządzenia Apple"
+      }
+    }
+  },
+  "exceptions": {
+    "icloud_only": {
+      "message": "{entity} to akcesorium sieci Find My: tylko urządzenia iCloud mogą odtworzyć dźwięk, wyświetlić wiadomość lub włączyć tryb Zgubiony."
+    },
+    "not_supported": {
+      "message": "{entity} nie obsługuje {action}."
+    },
+    "action_failed": {
+      "message": "iCloud odrzucił akcję: {error}"
+    },
+    "refresh_too_soon": {
+      "message": "Ostatnie odświeżenie było mniej niż {seconds} sekund temu."
+    },
+    "entry_not_loaded": {
+      "message": "Brak wczytanego konta Find My o ID {entry}."
+    }
+  },
+  "services": {
+    "play_sound": {
+      "name": "Odtwórz dźwięk",
+      "description": "Odtwarza dźwięk na urządzeniu iCloud, nawet w trybie cichym.",
+      "fields": {
+        "subject": {
+          "name": "Temat",
+          "description": "Tytuł alertu wyświetlanego na urządzeniu."
+        }
+      }
+    },
+    "display_message": {
+      "name": "Wyświetl wiadomość",
+      "description": "Wyświetla wiadomość na ekranie urządzenia iCloud.",
+      "fields": {
+        "message": {
+          "name": "Wiadomość",
+          "description": "Tekst wyświetlany na urządzeniu."
+        },
+        "subject": {
+          "name": "Temat",
+          "description": "Tytuł wiadomości."
+        },
+        "sound": {
+          "name": "Dźwięk",
+          "description": "Odtwórz też dźwięk."
+        }
+      }
+    },
+    "lost_mode": {
+      "name": "Tryb Zgubiony",
+      "description": "Włącza tryb Zgubiony na urządzeniu iCloud: urządzenie się blokuje i wyświetla wiadomość oraz numer do kontaktu.",
+      "fields": {
+        "phone_number": {
+          "name": "Numer telefonu",
+          "description": "Numer, pod który znalazca może zadzwonić z zablokowanego urządzenia."
+        },
+        "message": {
+          "name": "Wiadomość",
+          "description": "Tekst wyświetlany na zablokowanym urządzeniu (domyślny tekst Apple, jeśli puste)."
+        }
+      }
+    },
+    "refresh": {
+      "name": "Odśwież",
+      "description": "Pobiera lokalizacje teraz zamiast czekać na następne odświeżenie.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Konto",
+          "description": "Tylko to konto (wszystkie konta, jeśli puste)."
+        }
+      }
+    }
+  }
+}

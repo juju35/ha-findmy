@@ -1,0 +1,268 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Find My",
+        "menu_options": {
+          "icloud": "iCloud-account (iPhone, iPad, Mac, Apple Watch, AirPods)",
+          "network": "Account op het Find My-netwerk (AirTags en accessoires)"
+        }
+      },
+      "icloud": {
+        "title": "iCloud-account",
+        "description": "Log in met de Apple Account waarvan je de apparaten wilt volgen.",
+        "data": {
+          "apple_id": "Apple Account",
+          "password": "Wachtwoord",
+          "with_family": "Apparaten van de familie opnemen"
+        },
+        "data_description": {
+          "with_family": "Voegt ook de apparaten toe van gezinsleden die hun locatie met je delen"
+        }
+      },
+      "icloud_code": {
+        "title": "Verificatiecode",
+        "description": "Voer de verificatiecode in die Apple naar je vertrouwde Apple-apparaten of per sms heeft gestuurd. Home Assistant wordt dan een vertrouwde sessie en wordt er niet opnieuw om gevraagd.",
+        "data": {
+          "code": "Verificatiecode"
+        }
+      },
+      "network": {
+        "title": "Account op het Find My-netwerk",
+        "description": "Log in met de Apple Account waartoe de accessoires behoren. Hun locaties worden opgehaald van het Find My-netwerk.",
+        "data": {
+          "apple_id": "Apple Account",
+          "password": "Wachtwoord"
+        },
+        "sections": {
+          "advanced": {
+            "name": "Geavanceerde opties",
+            "description": "Apple antwoordt alleen aan clients die anisette-gegevens sturen. Standaard worden ze hier gegenereerd; geef het adres van je eigen anisette-server op om die te gebruiken.",
+            "data": {
+              "anisette_url": "Anisette-server"
+            },
+            "data_description": {
+              "anisette_url": "Bijvoorbeeld http://192.168.1.10:6969, leeg om ze hier te genereren"
+            }
+          }
+        }
+      },
+      "network_method": {
+        "title": "Verificatiemethode",
+        "description": "Hoe moet Apple de verificatiecode sturen?",
+        "data": {
+          "method": "Code sturen naar"
+        }
+      },
+      "network_code": {
+        "title": "Verificatiecode",
+        "description": "Voer de verificatiecode in die op je vertrouwde Apple-apparaten verschijnt.",
+        "data": {
+          "code": "Verificatiecode"
+        }
+      },
+      "network_sms_code": {
+        "title": "Verificatiecode",
+        "description": "Voer de verificatiecode in die per sms naar {phone} is gestuurd.",
+        "data": {
+          "code": "Verificatiecode"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Opnieuw inloggen",
+        "description": "iCloud vraagt {account} om opnieuw in te loggen. Voer het wachtwoord in; er kan een verificatiecode volgen.",
+        "data": {
+          "password": "Wachtwoord"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Onjuiste Apple Account of onjuist wachtwoord.",
+      "cannot_connect": "Apple is niet bereikbaar. Probeer het over een paar minuten opnieuw.",
+      "anisette_error": "Inloggen mislukt: controleer of de anisette-server antwoordt, of laat het veld leeg.",
+      "code_not_sent": "Apple heeft geen verificatiecode gestuurd. Probeer het over een paar minuten opnieuw.",
+      "invalid_code": "Onjuiste of verlopen verificatiecode.",
+      "no_second_factor": "Deze Apple Account heeft geen vertrouwd apparaat of telefoonnummer om een verificatiecode te ontvangen.",
+      "security_key": "Deze Apple Account logt in met een beveiligingssleutel, wat niet wordt ondersteund. Gebruik een account met verificatiecodes."
+    },
+    "abort": {
+      "already_configured": "Dit account is al toegevoegd.",
+      "reauth_successful": "Opnieuw ingelogd.",
+      "code_not_sent": "Apple heeft geen verificatiecode gestuurd. Probeer het over een paar minuten opnieuw.",
+      "wrong_account": "Dit is niet het account van deze vermelding: log in met dezelfde Apple Account."
+    }
+  },
+  "config_subentries": {
+    "accessory": {
+      "entry_type": "Accessoire",
+      "initiate_flow": {
+        "user": "Accessoires toevoegen"
+      },
+      "step": {
+        "user": {
+          "title": "Accessoires toevoegen",
+          "description": "De sleutels van AirTags en andere accessoires worden bewaard door de app Find My op een Mac: exporteer ze vanaf de Mac en importeer ze hier.",
+          "menu_options": {
+            "archive": "Alle accessoires uit een export (.zip)",
+            "plist": "Eén accessoire (.plist)",
+            "json": "Eén accessoire of een lijst met sleutels (.json)",
+            "key": "Een tag met een vaste sleutel"
+          }
+        },
+        "archive": {
+          "title": "Een export importeren",
+          "description": "Een zip van de geëxporteerde Find My-gegevens: elk accessoire uit de map OwnedBeacons wordt toegevoegd, met naam en sleuteluitlijning als de zip die bevat.",
+          "data": {
+            "file": "Export (.zip)"
+          }
+        },
+        "plist": {
+          "title": "Eén accessoire",
+          "description": "Het bestand van het accessoire uit OwnedBeacons en optioneel zijn bestand uit KeyAlignmentRecords, waardoor de eerste ophaling veel sneller gaat voor een lang geleden gekoppeld accessoire.",
+          "data": {
+            "file": "Accessoire (.plist)",
+            "alignment": "Sleuteluitlijning (.plist)",
+            "name": "Naam"
+          },
+          "data_description": {
+            "name": "Leeg om de modelnaam te gebruiken"
+          }
+        },
+        "json": {
+          "title": "JSON-bestand",
+          "description": "Een als JSON geëxporteerd accessoire, of een lijst met vooraf gegenereerde privésleutels van een DIY-tag.",
+          "data": {
+            "file": "Bestand (.json)",
+            "name": "Naam"
+          }
+        },
+        "key": {
+          "title": "Vaste sleutel",
+          "description": "Een DIY-tag die altijd dezelfde sleutel uitzendt.",
+          "data": {
+            "private_key": "Privésleutel",
+            "name": "Naam"
+          },
+          "data_description": {
+            "private_key": "Base64 (of 56 hexadecimale tekens)"
+          }
+        }
+      },
+      "error": {
+        "invalid_plist": "Dit bestand is geen property list (.plist).",
+        "encrypted_plist": "Dit bestand is nog versleuteld (macOS 14 en later): exporteer het met een hulpmiddel dat de Find My-gegevens ontsleutelt.",
+        "not_an_accessory": "Deze property list is geen Find My-accessoire.",
+        "invalid_zip": "Dit bestand is geen zip van de Find My-gegevens.",
+        "no_accessory_in_zip": "Geen accessoire gevonden: de zip moet de map OwnedBeacons bevatten.",
+        "invalid_json": "Dit bestand is geen accessoire en geen lijst met sleutels.",
+        "invalid_key": "Dit is geen privésleutel (28 bytes, in base64 of hexadecimaal)."
+      },
+      "abort": {
+        "already_configured": "Dit accessoire is al toegevoegd."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Find My-netwerk",
+        "data": {
+          "scan_interval": "Vernieuwingsinterval"
+        },
+        "data_description": {
+          "scan_interval": "Hoe vaak locaties worden opgehaald (15 tot 120 minuten). Accessoires sturen hun positie ongeveer elke 15 minuten: vaker vragen levert niets op en riskeert dat Apple het account beperkt."
+        }
+      },
+      "icloud": {
+        "title": "iCloud",
+        "data": {
+          "scan_interval": "Vernieuwingsinterval",
+          "with_family": "Apparaten van de familie opnemen",
+          "locate": "Apparaten vragen zich te lokaliseren"
+        },
+        "data_description": {
+          "scan_interval": "Hoe vaak iCloud wordt bevraagd (2 tot 60 minuten)",
+          "locate": "Elke vernieuwing vraagt de apparaten om een nieuwe positie, zoals de app Find My. Uit: de laatste positie die de apparaten uit zichzelf stuurden wordt gelezen, wat hun batterij spaart."
+        }
+      }
+    }
+  },
+  "selector": {
+    "second_factor": {
+      "options": {
+        "trusted_device": "Mijn vertrouwde Apple-apparaten"
+      }
+    }
+  },
+  "exceptions": {
+    "icloud_only": {
+      "message": "{entity} is een accessoire van het Find My-netwerk: alleen iCloud-apparaten kunnen een geluid afspelen, een bericht tonen of de modus Verloren inschakelen."
+    },
+    "not_supported": {
+      "message": "{entity} ondersteunt {action} niet."
+    },
+    "action_failed": {
+      "message": "iCloud weigerde de actie: {error}"
+    },
+    "refresh_too_soon": {
+      "message": "De laatste vernieuwing was minder dan {seconds} seconden geleden."
+    },
+    "entry_not_loaded": {
+      "message": "Geen geladen Find My-account met de ID {entry}."
+    }
+  },
+  "services": {
+    "play_sound": {
+      "name": "Geluid afspelen",
+      "description": "Laat een iCloud-apparaat een geluid afspelen, ook in stille modus.",
+      "fields": {
+        "subject": {
+          "name": "Onderwerp",
+          "description": "Titel van de melding op het apparaat."
+        }
+      }
+    },
+    "display_message": {
+      "name": "Bericht tonen",
+      "description": "Toont een bericht op het scherm van een iCloud-apparaat.",
+      "fields": {
+        "message": {
+          "name": "Bericht",
+          "description": "Tekst op het apparaat."
+        },
+        "subject": {
+          "name": "Onderwerp",
+          "description": "Titel van het bericht."
+        },
+        "sound": {
+          "name": "Geluid",
+          "description": "Speel ook een geluid af."
+        }
+      }
+    },
+    "lost_mode": {
+      "name": "Modus Verloren",
+      "description": "Schakelt de modus Verloren in op een iCloud-apparaat: het wordt vergrendeld en toont het bericht en een nummer om te bellen.",
+      "fields": {
+        "phone_number": {
+          "name": "Telefoonnummer",
+          "description": "Nummer dat de vinder vanaf het vergrendelde apparaat kan bellen."
+        },
+        "message": {
+          "name": "Bericht",
+          "description": "Tekst op het vergrendelde apparaat (standaardtekst van Apple als leeg)."
+        }
+      }
+    },
+    "refresh": {
+      "name": "Vernieuwen",
+      "description": "Haalt de locaties nu op in plaats van te wachten op de volgende vernieuwing.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Account",
+          "description": "Alleen dit account (alle accounts als leeg)."
+        }
+      }
+    }
+  }
+}
