@@ -1,8 +1,10 @@
 {
   "domain": "findmy",
   "name": "Find My",
+  "categories": ["presence_location.trackers", "presence_location.phones_companion_apps"],
   "codeowners": ["@juju35"],
   "config_flow": true,
+  "connectivity": ["cloud"],
   "dependencies": ["file_upload"],
   "documentation": "https://github.com/juju35/ha-findmy",
   "integration_type": "hub",
