@@ -43,7 +43,11 @@ carries the new version, updated together in one commit:
 ## README layout
 - Header order: H1, then the badge row, then the repo's **own logo** centered under the badges —
   `<p align="center"><img src=".../custom_components/findmy/brand/icon.png" width="120"></p>`.
-- **Brand logos**: right after the own logo, a centered `<p align="center">` row of the
+- **Work in progress**: until the integration has been tried on real accounts and AirTags, the animated
+  `images/wip.svg` banner sits right under the logo, in its own centered block
+  (`<p align="center"><img src=".../images/wip.svg" alt="Work in progress…" width="720"></p>`). The showcase
+  site mirrors it with `wip: true` on the project; remove both together once the project is stable.
+- **Brand logos**: right after the work-in-progress banner, a centered `<p align="center">` row of the
   vendor logos this integration targets (`images/*.svg`).
 - Keep image `width`/`height` bounded so it doesn't render oversized (Marketplace).
 - The README is consumed by the **homeassistant-projects** showcase site at build — keep its

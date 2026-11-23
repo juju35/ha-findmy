@@ -10,6 +10,8 @@
 
 <p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-findmy/main/custom_components/findmy/brand/icon.png" alt="Find My" width="120"></p>
 
+<p align="center"><img src="https://raw.githubusercontent.com/juju35/ha-findmy/main/images/wip.svg" alt="Work in progress: every part is covered by tests, it still needs real accounts and AirTags" width="720"></p>
+
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/juju35/ha-findmy/main/images/apple-dark.svg">
