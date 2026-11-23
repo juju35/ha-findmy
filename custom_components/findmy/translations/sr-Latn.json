@@ -1,0 +1,269 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Find My",
+        "menu_options": {
+          "icloud": "Nalog iCloud (iPhone, iPad, Mac, Apple Watch, AirPods)",
+          "network": "Nalog na mreži Find My (AirTag uređaji i dodaci)"
+        }
+      },
+      "icloud": {
+        "title": "Nalog iCloud",
+        "description": "Prijavite se Apple nalogom čije uređaje želite da pratite.",
+        "data": {
+          "apple_id": "Apple nalog",
+          "password": "Lozinka",
+          "with_family": "Uključi uređaje porodice"
+        },
+        "data_description": {
+          "with_family": "Dodaje i uređaje članova porodice koji dele svoju lokaciju sa vama"
+        }
+      },
+      "icloud_code": {
+        "title": "Verifikacioni kod",
+        "description": "Unesite verifikacioni kod koji je Apple poslao na vaše pouzdane Apple uređaje ili SMS porukom. Home Assistant tada postaje pouzdana sesija i kod se više ne traži.",
+        "data": {
+          "code": "Verifikacioni kod"
+        }
+      },
+      "network": {
+        "title": "Nalog na mreži Find My",
+        "description": "Prijavite se Apple nalogom kojem pripadaju dodaci. Njihove lokacije se preuzimaju sa mreže Find My.",
+        "data": {
+          "apple_id": "Apple nalog",
+          "password": "Lozinka"
+        },
+        "sections": {
+          "advanced": {
+            "name": "Napredne opcije",
+            "description": "Apple odgovara samo klijentima koji šalju anisette podatke. Podrazumevano se generišu ovde; unesite adresu sopstvenog anisette servera da biste njega koristili.",
+            "data": {
+              "anisette_url": "Anisette server"
+            },
+            "data_description": {
+              "anisette_url": "Na primer http://192.168.1.10:6969, prazno za generisanje ovde"
+            }
+          }
+        }
+      },
+      "network_method": {
+        "title": "Način verifikacije",
+        "description": "Kako Apple treba da pošalje verifikacioni kod?",
+        "data": {
+          "method": "Pošalji kod na"
+        }
+      },
+      "network_code": {
+        "title": "Verifikacioni kod",
+        "description": "Unesite verifikacioni kod prikazan na vašim pouzdanim Apple uređajima.",
+        "data": {
+          "code": "Verifikacioni kod"
+        }
+      },
+      "network_sms_code": {
+        "title": "Verifikacioni kod",
+        "description": "Unesite verifikacioni kod poslat SMS porukom na {phone}.",
+        "data": {
+          "code": "Verifikacioni kod"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Ponovna prijava",
+        "description": "iCloud traži da se {account} ponovo prijavi. Unesite lozinku; može uslediti verifikacioni kod.",
+        "data": {
+          "password": "Lozinka"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Pogrešan Apple nalog ili lozinka.",
+      "cannot_connect": "Apple nije dostupan. Pokušajte ponovo za nekoliko minuta.",
+      "anisette_error": "Prijava nije uspela: proverite da li anisette server odgovara ili ostavite polje prazno.",
+      "code_not_sent": "Apple nije poslao verifikacioni kod. Pokušajte ponovo za nekoliko minuta.",
+      "invalid_code": "Pogrešan ili istekao verifikacioni kod.",
+      "no_second_factor": "Ovaj Apple nalog nema pouzdan uređaj ni broj telefona za prijem verifikacionog koda.",
+      "security_key": "Ovaj Apple nalog se prijavljuje bezbednosnim ključem, što nije podržano. Koristite nalog sa verifikacionim kodovima."
+    },
+    "abort": {
+      "already_configured": "Ovaj nalog je već dodat.",
+      "reauth_successful": "Ponovo ste prijavljeni.",
+      "code_not_sent": "Apple nije poslao verifikacioni kod. Pokušajte ponovo za nekoliko minuta.",
+      "wrong_account": "Ovo nije nalog ovog unosa: prijavite se istim Apple nalogom."
+    }
+  },
+  "config_subentries": {
+    "accessory": {
+      "entry_type": "Dodatak",
+      "initiate_flow": {
+        "user": "Dodaj dodatke"
+      },
+      "step": {
+        "user": {
+          "title": "Dodaj dodatke",
+          "description": "Ključeve AirTag uređaja i drugih dodataka čuva aplikacija Find My na Mac računaru: izvezite ih sa Mac računara, pa ih uvezite ovde.",
+          "menu_options": {
+            "archive": "Svi dodaci iz izvoza (.zip)",
+            "plist": "Jedan dodatak (.plist)",
+            "json": "Jedan dodatak ili lista ključeva (.json)",
+            "key": "Oznaka sa stalnim ključem"
+          }
+        },
+        "archive": {
+          "title": "Uvezi izvoz",
+          "description": "Zip sa izvezenim Find My podacima: dodaje se svaki dodatak iz fascikle OwnedBeacons, sa imenom i poravnanjem ključeva kada ih zip sadrži.",
+          "data": {
+            "file": "Izvoz (.zip)"
+          }
+        },
+        "plist": {
+          "title": "Jedan dodatak",
+          "description": "Datoteka dodatka iz OwnedBeacons i, po želji, njegova datoteka iz KeyAlignmentRecords, koja znatno ubrzava prvo preuzimanje za dodatak uparen davno.",
+          "data": {
+            "file": "Dodatak (.plist)",
+            "alignment": "Poravnanje ključeva (.plist)",
+            "name": "Ime"
+          },
+          "data_description": {
+            "name": "Prazno za korišćenje naziva modela"
+          }
+        },
+        "json": {
+          "title": "JSON datoteka",
+          "description": "Dodatak izvezen kao JSON ili lista unapred generisanih privatnih ključeva DIY oznake.",
+          "data": {
+            "file": "Datoteka (.json)",
+            "name": "Ime"
+          }
+        },
+        "key": {
+          "title": "Stalni ključ",
+          "description": "DIY oznaka koja uvek emituje isti ključ.",
+          "data": {
+            "private_key": "Privatni ključ",
+            "name": "Ime"
+          },
+          "data_description": {
+            "private_key": "Base64 (ili 56 heksadecimalnih znakova)"
+          }
+        }
+      },
+      "error": {
+        "invalid_plist": "Ova datoteka nije lista svojstava (.plist).",
+        "encrypted_plist": "Ova datoteka je još šifrovana (macOS 14 i noviji): izvezite je alatom koji dešifruje Find My podatke.",
+        "not_an_accessory": "Ova lista svojstava nije Find My dodatak.",
+        "invalid_zip": "Ova datoteka nije zip sa Find My podacima.",
+        "no_accessory_in_zip": "Nije pronađen nijedan dodatak: zip mora da sadrži fasciklu OwnedBeacons.",
+        "invalid_json": "Ova datoteka nije ni dodatak ni lista ključeva.",
+        "invalid_key": "Ovo nije privatni ključ (28 bajtova, u base64 ili heksadecimalnom obliku).",
+        "upload_missing": "Datoteka je već pročitana: ponovo izaberite datoteke."
+      },
+      "abort": {
+        "already_configured": "Ovaj dodatak je već dodat."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Mreža Find My",
+        "data": {
+          "scan_interval": "Interval osvežavanja"
+        },
+        "data_description": {
+          "scan_interval": "Koliko često se preuzimaju lokacije (od 15 do 120 minuta). Dodaci šalju svoj položaj otprilike na svakih 15 minuta: češći upiti ne donose ništa i rizikuju da Apple ograniči nalog."
+        }
+      },
+      "icloud": {
+        "title": "iCloud",
+        "data": {
+          "scan_interval": "Interval osvežavanja",
+          "with_family": "Uključi uređaje porodice",
+          "locate": "Traži od uređaja da se lociraju"
+        },
+        "data_description": {
+          "scan_interval": "Koliko često se upituje iCloud (od 2 do 60 minuta)",
+          "locate": "Svako osvežavanje traži od uređaja nov položaj, kao aplikacija Find My. Isključeno: čita se poslednji položaj koji su uređaji sami poslali, što štedi njihovu bateriju."
+        }
+      }
+    }
+  },
+  "selector": {
+    "second_factor": {
+      "options": {
+        "trusted_device": "Moji pouzdani Apple uređaji"
+      }
+    }
+  },
+  "exceptions": {
+    "icloud_only": {
+      "message": "{entity} je dodatak mreže Find My: samo iCloud uređaji mogu da zvone, prikažu poruku ili uključe režim Izgubljeno."
+    },
+    "not_supported": {
+      "message": "{entity} ne podržava {action}."
+    },
+    "action_failed": {
+      "message": "iCloud je odbio radnju: {error}"
+    },
+    "refresh_too_soon": {
+      "message": "Poslednje osvežavanje je bilo pre manje od {seconds} sekundi."
+    },
+    "entry_not_loaded": {
+      "message": "Nema učitanog Find My naloga sa ID-om {entry}."
+    }
+  },
+  "services": {
+    "play_sound": {
+      "name": "Pusti zvuk",
+      "description": "Tera iCloud uređaj da zvoni, čak i u nečujnom režimu.",
+      "fields": {
+        "subject": {
+          "name": "Tema",
+          "description": "Naslov upozorenja prikazanog na uređaju."
+        }
+      }
+    },
+    "display_message": {
+      "name": "Prikaži poruku",
+      "description": "Prikazuje poruku na ekranu iCloud uređaja.",
+      "fields": {
+        "message": {
+          "name": "Poruka",
+          "description": "Tekst prikazan na uređaju."
+        },
+        "subject": {
+          "name": "Tema",
+          "description": "Naslov poruke."
+        },
+        "sound": {
+          "name": "Zvuk",
+          "description": "Pusti i zvuk."
+        }
+      }
+    },
+    "lost_mode": {
+      "name": "Režim Izgubljeno",
+      "description": "Uključuje režim Izgubljeno na iCloud uređaju: zaključava se i prikazuje poruku i broj za poziv.",
+      "fields": {
+        "phone_number": {
+          "name": "Broj telefona",
+          "description": "Broj koji nalazač može da pozove sa zaključanog uređaja."
+        },
+        "message": {
+          "name": "Poruka",
+          "description": "Tekst prikazan na zaključanom uređaju (podrazumevani Apple tekst ako je prazno)."
+        }
+      }
+    },
+    "refresh": {
+      "name": "Osveži",
+      "description": "Preuzima lokacije odmah umesto da čeka sledeće osvežavanje.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Nalog",
+          "description": "Samo ovaj nalog (svi nalozi ako je prazno)."
+        }
+      }
+    }
+  }
+}

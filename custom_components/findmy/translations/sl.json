@@ -1,0 +1,269 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Find My",
+        "menu_options": {
+          "icloud": "Račun iCloud (iPhone, iPad, Mac, Apple Watch, AirPods)",
+          "network": "Račun v omrežju Find My (AirTagi in dodatki)"
+        }
+      },
+      "icloud": {
+        "title": "Račun iCloud",
+        "description": "Prijavite se z računom Apple, katerega naprave želite spremljati.",
+        "data": {
+          "apple_id": "Račun Apple",
+          "password": "Geslo",
+          "with_family": "Vključi naprave družine"
+        },
+        "data_description": {
+          "with_family": "Doda tudi naprave družinskih članov, ki z vami delijo svojo lokacijo"
+        }
+      },
+      "icloud_code": {
+        "title": "Potrditvena koda",
+        "description": "Vnesite potrditveno kodo, ki jo je Apple poslal na vaše zaupanja vredne naprave Apple ali po SMS-u. Home Assistant nato postane zaupanja vredna seja in kode ne bo več zahteval.",
+        "data": {
+          "code": "Potrditvena koda"
+        }
+      },
+      "network": {
+        "title": "Račun v omrežju Find My",
+        "description": "Prijavite se z računom Apple, ki so mu dodatki dodeljeni. Njihove lokacije se pridobijo iz omrežja Find My.",
+        "data": {
+          "apple_id": "Račun Apple",
+          "password": "Geslo"
+        },
+        "sections": {
+          "advanced": {
+            "name": "Napredne možnosti",
+            "description": "Apple odgovarja le odjemalcem, ki pošiljajo podatke anisette. Privzeto se ustvarijo tukaj; vnesite naslov lastnega strežnika anisette, če ga želite uporabiti.",
+            "data": {
+              "anisette_url": "Strežnik anisette"
+            },
+            "data_description": {
+              "anisette_url": "Na primer http://192.168.1.10:6969, prazno za ustvarjanje tukaj"
+            }
+          }
+        }
+      },
+      "network_method": {
+        "title": "Način potrditve",
+        "description": "Kako naj Apple pošlje potrditveno kodo?",
+        "data": {
+          "method": "Pošlji kodo na"
+        }
+      },
+      "network_code": {
+        "title": "Potrditvena koda",
+        "description": "Vnesite potrditveno kodo, prikazano na vaših zaupanja vrednih napravah Apple.",
+        "data": {
+          "code": "Potrditvena koda"
+        }
+      },
+      "network_sms_code": {
+        "title": "Potrditvena koda",
+        "description": "Vnesite potrditveno kodo, poslano po SMS-u na {phone}.",
+        "data": {
+          "code": "Potrditvena koda"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Ponovna prijava",
+        "description": "iCloud prosi {account} za ponovno prijavo. Vnesite geslo; lahko sledi potrditvena koda.",
+        "data": {
+          "password": "Geslo"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Napačen račun Apple ali geslo.",
+      "cannot_connect": "Apple ni dosegljiv. Poskusite znova čez nekaj minut.",
+      "anisette_error": "Prijava ni uspela: preverite, ali strežnik anisette odgovarja, ali pustite polje prazno.",
+      "code_not_sent": "Apple ni poslal potrditvene kode. Poskusite znova čez nekaj minut.",
+      "invalid_code": "Napačna ali potekla potrditvena koda.",
+      "no_second_factor": "Ta račun Apple nima zaupanja vredne naprave ali telefonske številke za prejem potrditvene kode.",
+      "security_key": "Ta račun Apple se prijavlja z varnostnim ključem, ki ni podprt. Uporabite račun s potrditvenimi kodami."
+    },
+    "abort": {
+      "already_configured": "Ta račun je že dodan.",
+      "reauth_successful": "Ponovno prijavljeni.",
+      "code_not_sent": "Apple ni poslal potrditvene kode. Poskusite znova čez nekaj minut.",
+      "wrong_account": "To ni račun tega vnosa: prijavite se z istim računom Apple."
+    }
+  },
+  "config_subentries": {
+    "accessory": {
+      "entry_type": "Dodatek",
+      "initiate_flow": {
+        "user": "Dodaj dodatke"
+      },
+      "step": {
+        "user": {
+          "title": "Dodaj dodatke",
+          "description": "Ključe AirTagov in drugih dodatkov hrani aplikacija Find My v Macu: izvozite jih iz Maca in jih nato uvozite tukaj.",
+          "menu_options": {
+            "archive": "Vsi dodatki iz izvoza (.zip)",
+            "plist": "En dodatek (.plist)",
+            "json": "En dodatek ali seznam ključev (.json)",
+            "key": "Oznaka s stalnim ključem"
+          }
+        },
+        "archive": {
+          "title": "Uvozi izvoz",
+          "description": "Zip z izvoženimi podatki Find My: doda se vsak dodatek iz mape OwnedBeacons, z imenom in poravnavo ključev, če ju zip vsebuje.",
+          "data": {
+            "file": "Izvoz (.zip)"
+          }
+        },
+        "plist": {
+          "title": "En dodatek",
+          "description": "Datoteka dodatka iz OwnedBeacons in po želji njegova datoteka iz KeyAlignmentRecords, ki močno pospeši prvo pridobivanje za dodatek, seznanjen pred dolgim časom.",
+          "data": {
+            "file": "Dodatek (.plist)",
+            "alignment": "Poravnava ključev (.plist)",
+            "name": "Ime"
+          },
+          "data_description": {
+            "name": "Prazno za uporabo imena modela"
+          }
+        },
+        "json": {
+          "title": "Datoteka JSON",
+          "description": "Dodatek, izvožen kot JSON, ali seznam vnaprej ustvarjenih zasebnih ključev oznake DIY.",
+          "data": {
+            "file": "Datoteka (.json)",
+            "name": "Ime"
+          }
+        },
+        "key": {
+          "title": "Stalni ključ",
+          "description": "Oznaka DIY, ki vedno oddaja isti ključ.",
+          "data": {
+            "private_key": "Zasebni ključ",
+            "name": "Ime"
+          },
+          "data_description": {
+            "private_key": "Base64 (ali 56 šestnajstiških znakov)"
+          }
+        }
+      },
+      "error": {
+        "invalid_plist": "Ta datoteka ni seznam lastnosti (.plist).",
+        "encrypted_plist": "Ta datoteka je še šifrirana (macOS 14 in novejši): izvozite jo z orodjem, ki dešifrira podatke Find My.",
+        "not_an_accessory": "Ta seznam lastnosti ni dodatek Find My.",
+        "invalid_zip": "Ta datoteka ni zip s podatki Find My.",
+        "no_accessory_in_zip": "Ni najdenega dodatka: zip mora vsebovati mapo OwnedBeacons.",
+        "invalid_json": "Ta datoteka ni dodatek ne seznam ključev.",
+        "invalid_key": "To ni zasebni ključ (28 bajtov, v base64 ali šestnajstiško).",
+        "upload_missing": "Datoteka je že prebrana: znova izberite datoteke."
+      },
+      "abort": {
+        "already_configured": "Ta dodatek je že dodan."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Omrežje Find My",
+        "data": {
+          "scan_interval": "Interval osveževanja"
+        },
+        "data_description": {
+          "scan_interval": "Kako pogosto se pridobijo lokacije (od 15 do 120 minut). Dodatki pošljejo svoj položaj približno vsakih 15 minut: pogostejše poizvedbe ne prinesejo ničesar in tvegajo, da Apple račun omeji."
+        }
+      },
+      "icloud": {
+        "title": "iCloud",
+        "data": {
+          "scan_interval": "Interval osveževanja",
+          "with_family": "Vključi naprave družine",
+          "locate": "Prosi naprave, naj se locirajo"
+        },
+        "data_description": {
+          "scan_interval": "Kako pogosto se poizveduje pri iCloud (od 2 do 60 minut)",
+          "locate": "Vsako osveževanje naprave prosi za nov položaj, kot aplikacija Find My. Izklopljeno: prebere se zadnji položaj, ki so ga naprave poslale same, kar varčuje z baterijo."
+        }
+      }
+    }
+  },
+  "selector": {
+    "second_factor": {
+      "options": {
+        "trusted_device": "Moje zaupanja vredne naprave Apple"
+      }
+    }
+  },
+  "exceptions": {
+    "icloud_only": {
+      "message": "{entity} je dodatek omrežja Find My: zazvoniti, prikazati sporočilo ali vklopiti način Izgubljeno lahko le naprave iCloud."
+    },
+    "not_supported": {
+      "message": "{entity} ne podpira {action}."
+    },
+    "action_failed": {
+      "message": "iCloud je zavrnil dejanje: {error}"
+    },
+    "refresh_too_soon": {
+      "message": "Zadnje osveževanje je bilo pred manj kot {seconds} sekundami."
+    },
+    "entry_not_loaded": {
+      "message": "Ni naloženega računa Find My z ID-jem {entry}."
+    }
+  },
+  "services": {
+    "play_sound": {
+      "name": "Predvajaj zvok",
+      "description": "Napravo iCloud pripravi do zvonjenja, tudi v tihem načinu.",
+      "fields": {
+        "subject": {
+          "name": "Zadeva",
+          "description": "Naslov opozorila, prikazanega na napravi."
+        }
+      }
+    },
+    "display_message": {
+      "name": "Prikaži sporočilo",
+      "description": "Prikaže sporočilo na zaslonu naprave iCloud.",
+      "fields": {
+        "message": {
+          "name": "Sporočilo",
+          "description": "Besedilo, prikazano na napravi."
+        },
+        "subject": {
+          "name": "Zadeva",
+          "description": "Naslov sporočila."
+        },
+        "sound": {
+          "name": "Zvok",
+          "description": "Predvajaj tudi zvok."
+        }
+      }
+    },
+    "lost_mode": {
+      "name": "Način Izgubljeno",
+      "description": "Vklopi način Izgubljeno na napravi iCloud: zaklene se in prikaže sporočilo ter številko za klic.",
+      "fields": {
+        "phone_number": {
+          "name": "Telefonska številka",
+          "description": "Številka, ki jo lahko najditelj pokliče z zaklenjene naprave."
+        },
+        "message": {
+          "name": "Sporočilo",
+          "description": "Besedilo, prikazano na zaklenjeni napravi (privzeto besedilo Apple, če je prazno)."
+        }
+      }
+    },
+    "refresh": {
+      "name": "Osveži",
+      "description": "Pridobi lokacije zdaj namesto čakanja na naslednje osveževanje.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Račun",
+          "description": "Samo ta račun (vsi računi, če je prazno)."
+        }
+      }
+    }
+  }
+}

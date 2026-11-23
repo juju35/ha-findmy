@@ -1,0 +1,269 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Find My",
+        "menu_options": {
+          "icloud": "Účet iCloud (iPhone, iPad, Mac, Apple Watch, AirPods)",
+          "network": "Účet v sieti Find My (AirTagy a príslušenstvo)"
+        }
+      },
+      "icloud": {
+        "title": "Účet iCloud",
+        "description": "Prihláste sa účtom Apple, ktorého zariadenia chcete sledovať.",
+        "data": {
+          "apple_id": "Účet Apple",
+          "password": "Heslo",
+          "with_family": "Zahrnúť zariadenia rodiny"
+        },
+        "data_description": {
+          "with_family": "Pridá aj zariadenia členov rodiny, ktorí s vami zdieľajú polohu"
+        }
+      },
+      "icloud_code": {
+        "title": "Overovací kód",
+        "description": "Zadajte overovací kód, ktorý Apple poslal na vaše dôveryhodné zariadenia Apple alebo SMS správou. Home Assistant sa potom stane dôveryhodnou reláciou a kód už nebude vyžadovaný.",
+        "data": {
+          "code": "Overovací kód"
+        }
+      },
+      "network": {
+        "title": "Účet v sieti Find My",
+        "description": "Prihláste sa účtom Apple, ku ktorému príslušenstvo patrí. Jeho polohy sa načítavajú zo siete Find My.",
+        "data": {
+          "apple_id": "Účet Apple",
+          "password": "Heslo"
+        },
+        "sections": {
+          "advanced": {
+            "name": "Rozšírené možnosti",
+            "description": "Apple odpovedá len klientom, ktorí posielajú údaje anisette. Predvolene sa generujú tu; zadajte adresu vlastného servera anisette, ak ho chcete použiť.",
+            "data": {
+              "anisette_url": "Server anisette"
+            },
+            "data_description": {
+              "anisette_url": "Napríklad http://192.168.1.10:6969, prázdne na generovanie tu"
+            }
+          }
+        }
+      },
+      "network_method": {
+        "title": "Spôsob overenia",
+        "description": "Ako má Apple poslať overovací kód?",
+        "data": {
+          "method": "Poslať kód na"
+        }
+      },
+      "network_code": {
+        "title": "Overovací kód",
+        "description": "Zadajte overovací kód zobrazený na vašich dôveryhodných zariadeniach Apple.",
+        "data": {
+          "code": "Overovací kód"
+        }
+      },
+      "network_sms_code": {
+        "title": "Overovací kód",
+        "description": "Zadajte overovací kód zaslaný SMS správou na číslo {phone}.",
+        "data": {
+          "code": "Overovací kód"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Znova sa prihlásiť",
+        "description": "iCloud žiada {account} o nové prihlásenie. Zadajte heslo; môže nasledovať overovací kód.",
+        "data": {
+          "password": "Heslo"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Nesprávny účet Apple alebo heslo.",
+      "cannot_connect": "Apple nie je dostupný. Skúste to znova o niekoľko minút.",
+      "anisette_error": "Prihlásenie zlyhalo: overte, že server anisette odpovedá, alebo nechajte pole prázdne.",
+      "code_not_sent": "Apple neposlal žiadny overovací kód. Skúste to znova o niekoľko minút.",
+      "invalid_code": "Nesprávny alebo uplynutý overovací kód.",
+      "no_second_factor": "Tento účet Apple nemá žiadne dôveryhodné zariadenie ani telefónne číslo na prijatie overovacieho kódu.",
+      "security_key": "Tento účet Apple sa prihlasuje bezpečnostným kľúčom, čo nie je podporované. Použite účet s overovacími kódmi."
+    },
+    "abort": {
+      "already_configured": "Tento účet je už pridaný.",
+      "reauth_successful": "Znova prihlásené.",
+      "code_not_sent": "Apple neposlal žiadny overovací kód. Skúste to znova o niekoľko minút.",
+      "wrong_account": "Toto nie je účet tejto položky: prihláste sa rovnakým účtom Apple."
+    }
+  },
+  "config_subentries": {
+    "accessory": {
+      "entry_type": "Príslušenstvo",
+      "initiate_flow": {
+        "user": "Pridať príslušenstvo"
+      },
+      "step": {
+        "user": {
+          "title": "Pridať príslušenstvo",
+          "description": "Kľúče AirTagov a ďalšieho príslušenstva uchováva aplikácia Find My na Macu: exportujte ich z Macu a potom ich importujte sem.",
+          "menu_options": {
+            "archive": "Všetko príslušenstvo z exportu (.zip)",
+            "plist": "Jedno príslušenstvo (.plist)",
+            "json": "Jedno príslušenstvo alebo zoznam kľúčov (.json)",
+            "key": "Štítok s pevným kľúčom"
+          }
+        },
+        "archive": {
+          "title": "Importovať export",
+          "description": "Zip s exportovanými údajmi Find My: pridá sa každé príslušenstvo z priečinka OwnedBeacons, s názvom a zarovnaním kľúčov, ak ich zip obsahuje.",
+          "data": {
+            "file": "Export (.zip)"
+          }
+        },
+        "plist": {
+          "title": "Jedno príslušenstvo",
+          "description": "Súbor príslušenstva z priečinka OwnedBeacons a voliteľne jeho súbor z KeyAlignmentRecords, ktorý výrazne zrýchli prvé načítanie pri príslušenstve spárovanom pred dávnom.",
+          "data": {
+            "file": "Príslušenstvo (.plist)",
+            "alignment": "Zarovnanie kľúčov (.plist)",
+            "name": "Názov"
+          },
+          "data_description": {
+            "name": "Prázdne na použitie názvu modelu"
+          }
+        },
+        "json": {
+          "title": "Súbor JSON",
+          "description": "Príslušenstvo exportované ako JSON alebo zoznam vopred vygenerovaných súkromných kľúčov štítku DIY.",
+          "data": {
+            "file": "Súbor (.json)",
+            "name": "Názov"
+          }
+        },
+        "key": {
+          "title": "Pevný kľúč",
+          "description": "Štítok DIY, ktorý vysiela stále rovnaký kľúč.",
+          "data": {
+            "private_key": "Súkromný kľúč",
+            "name": "Názov"
+          },
+          "data_description": {
+            "private_key": "Base64 (alebo 56 šestnástkových znakov)"
+          }
+        }
+      },
+      "error": {
+        "invalid_plist": "Tento súbor nie je zoznam vlastností (.plist).",
+        "encrypted_plist": "Tento súbor je stále šifrovaný (macOS 14 a novší): exportujte ho nástrojom, ktorý dešifruje údaje Find My.",
+        "not_an_accessory": "Tento zoznam vlastností nie je príslušenstvo Find My.",
+        "invalid_zip": "Tento súbor nie je zip s údajmi Find My.",
+        "no_accessory_in_zip": "Nenašlo sa žiadne príslušenstvo: zip musí obsahovať priečinok OwnedBeacons.",
+        "invalid_json": "Tento súbor nie je príslušenstvo ani zoznam kľúčov.",
+        "invalid_key": "Toto nie je súkromný kľúč (28 bajtov, v base64 alebo šestnástkovo).",
+        "upload_missing": "Súbor už bol načítaný: vyberte súbory znova."
+      },
+      "abort": {
+        "already_configured": "Toto príslušenstvo je už pridané."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Sieť Find My",
+        "data": {
+          "scan_interval": "Interval obnovenia"
+        },
+        "data_description": {
+          "scan_interval": "Ako často sa načítavajú polohy (15 až 120 minút). Príslušenstvo posiela polohu približne každých 15 minút: častejšie dopyty nič neprinesú a hrozí, že Apple účet obmedzí."
+        }
+      },
+      "icloud": {
+        "title": "iCloud",
+        "data": {
+          "scan_interval": "Interval obnovenia",
+          "with_family": "Zahrnúť zariadenia rodiny",
+          "locate": "Žiadať zariadenia o určenie polohy"
+        },
+        "data_description": {
+          "scan_interval": "Ako často sa dopytuje iCloud (2 až 60 minút)",
+          "locate": "Každé obnovenie požiada zariadenia o novú polohu ako aplikácia Find My. Vypnuté: číta sa posledná poloha, ktorú zariadenia poslali samy, čo šetrí ich batériu."
+        }
+      }
+    }
+  },
+  "selector": {
+    "second_factor": {
+      "options": {
+        "trusted_device": "Moje dôveryhodné zariadenia Apple"
+      }
+    }
+  },
+  "exceptions": {
+    "icloud_only": {
+      "message": "{entity} je príslušenstvo siete Find My: zvoniť, zobraziť správu alebo zapnúť režim Stratené môžu len zariadenia iCloud."
+    },
+    "not_supported": {
+      "message": "{entity} nepodporuje {action}."
+    },
+    "action_failed": {
+      "message": "iCloud akciu odmietol: {error}"
+    },
+    "refresh_too_soon": {
+      "message": "Posledné obnovenie prebehlo pred menej ako {seconds} sekundami."
+    },
+    "entry_not_loaded": {
+      "message": "Žiadny načítaný účet Find My s ID {entry}."
+    }
+  },
+  "services": {
+    "play_sound": {
+      "name": "Prehrať zvuk",
+      "description": "Rozozvoní zariadenie iCloud, aj v tichom režime.",
+      "fields": {
+        "subject": {
+          "name": "Predmet",
+          "description": "Názov upozornenia zobrazeného na zariadení."
+        }
+      }
+    },
+    "display_message": {
+      "name": "Zobraziť správu",
+      "description": "Zobrazí správu na obrazovke zariadenia iCloud.",
+      "fields": {
+        "message": {
+          "name": "Správa",
+          "description": "Text zobrazený na zariadení."
+        },
+        "subject": {
+          "name": "Predmet",
+          "description": "Názov správy."
+        },
+        "sound": {
+          "name": "Zvuk",
+          "description": "Prehrať aj zvuk."
+        }
+      }
+    },
+    "lost_mode": {
+      "name": "Režim Stratené",
+      "description": "Zapne režim Stratené na zariadení iCloud: zariadenie sa zamkne a zobrazí správu a číslo, na ktoré sa dá volať.",
+      "fields": {
+        "phone_number": {
+          "name": "Telefónne číslo",
+          "description": "Číslo, na ktoré môže nálezca zavolať zo zamknutého zariadenia."
+        },
+        "message": {
+          "name": "Správa",
+          "description": "Text zobrazený na zamknutom zariadení (predvolený text Apple, ak je prázdne)."
+        }
+      }
+    },
+    "refresh": {
+      "name": "Obnoviť",
+      "description": "Načíta polohy hneď namiesto čakania na ďalšie obnovenie.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Účet",
+          "description": "Len tento účet (všetky účty, ak je prázdne)."
+        }
+      }
+    }
+  }
+}

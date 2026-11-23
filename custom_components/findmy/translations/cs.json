@@ -1,0 +1,269 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Find My",
+        "menu_options": {
+          "icloud": "Účet iCloud (iPhone, iPad, Mac, Apple Watch, AirPods)",
+          "network": "Účet v síti Find My (AirTagy a příslušenství)"
+        }
+      },
+      "icloud": {
+        "title": "Účet iCloud",
+        "description": "Přihlaste se účtem Apple, jehož zařízení chcete sledovat.",
+        "data": {
+          "apple_id": "Účet Apple",
+          "password": "Heslo",
+          "with_family": "Zahrnout zařízení rodiny"
+        },
+        "data_description": {
+          "with_family": "Přidá také zařízení členů rodiny, kteří s vámi sdílejí polohu"
+        }
+      },
+      "icloud_code": {
+        "title": "Ověřovací kód",
+        "description": "Zadejte ověřovací kód, který Apple poslal na vaše důvěryhodná zařízení Apple nebo SMS zprávou. Home Assistant se pak stane důvěryhodnou relací a kód již nebude vyžadován.",
+        "data": {
+          "code": "Ověřovací kód"
+        }
+      },
+      "network": {
+        "title": "Účet v síti Find My",
+        "description": "Přihlaste se účtem Apple, ke kterému příslušenství patří. Jeho polohy se načítají ze sítě Find My.",
+        "data": {
+          "apple_id": "Účet Apple",
+          "password": "Heslo"
+        },
+        "sections": {
+          "advanced": {
+            "name": "Pokročilé možnosti",
+            "description": "Apple odpovídá jen klientům, kteří posílají data anisette. Ve výchozím stavu se generují zde; zadejte adresu vlastního serveru anisette, chcete-li ho použít.",
+            "data": {
+              "anisette_url": "Server anisette"
+            },
+            "data_description": {
+              "anisette_url": "Například http://192.168.1.10:6969, prázdné pro generování zde"
+            }
+          }
+        }
+      },
+      "network_method": {
+        "title": "Způsob ověření",
+        "description": "Jak má Apple poslat ověřovací kód?",
+        "data": {
+          "method": "Poslat kód na"
+        }
+      },
+      "network_code": {
+        "title": "Ověřovací kód",
+        "description": "Zadejte ověřovací kód zobrazený na vašich důvěryhodných zařízeních Apple.",
+        "data": {
+          "code": "Ověřovací kód"
+        }
+      },
+      "network_sms_code": {
+        "title": "Ověřovací kód",
+        "description": "Zadejte ověřovací kód zaslaný SMS zprávou na číslo {phone}.",
+        "data": {
+          "code": "Ověřovací kód"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Znovu se přihlásit",
+        "description": "iCloud žádá {account} o nové přihlášení. Zadejte heslo; může následovat ověřovací kód.",
+        "data": {
+          "password": "Heslo"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Nesprávný účet Apple nebo heslo.",
+      "cannot_connect": "Apple není dostupný. Zkuste to znovu za několik minut.",
+      "anisette_error": "Přihlášení selhalo: ověřte, že server anisette odpovídá, nebo nechte pole prázdné.",
+      "code_not_sent": "Apple neposlal žádný ověřovací kód. Zkuste to znovu za několik minut.",
+      "invalid_code": "Nesprávný nebo prošlý ověřovací kód.",
+      "no_second_factor": "Tento účet Apple nemá žádné důvěryhodné zařízení ani telefonní číslo pro příjem ověřovacího kódu.",
+      "security_key": "Tento účet Apple se přihlašuje bezpečnostním klíčem, což není podporováno. Použijte účet s ověřovacími kódy."
+    },
+    "abort": {
+      "already_configured": "Tento účet je již přidán.",
+      "reauth_successful": "Znovu přihlášeno.",
+      "code_not_sent": "Apple neposlal žádný ověřovací kód. Zkuste to znovu za několik minut.",
+      "wrong_account": "Toto není účet této položky: přihlaste se stejným účtem Apple."
+    }
+  },
+  "config_subentries": {
+    "accessory": {
+      "entry_type": "Příslušenství",
+      "initiate_flow": {
+        "user": "Přidat příslušenství"
+      },
+      "step": {
+        "user": {
+          "title": "Přidat příslušenství",
+          "description": "Klíče AirTagů a dalšího příslušenství uchovává aplikace Find My na Macu: exportujte je z Macu a poté je importujte zde.",
+          "menu_options": {
+            "archive": "Veškeré příslušenství z exportu (.zip)",
+            "plist": "Jedno příslušenství (.plist)",
+            "json": "Jedno příslušenství nebo seznam klíčů (.json)",
+            "key": "Štítek s pevným klíčem"
+          }
+        },
+        "archive": {
+          "title": "Importovat export",
+          "description": "Zip s exportovanými daty Find My: přidá se každé příslušenství ze složky OwnedBeacons, s názvem a zarovnáním klíčů, pokud je zip obsahuje.",
+          "data": {
+            "file": "Export (.zip)"
+          }
+        },
+        "plist": {
+          "title": "Jedno příslušenství",
+          "description": "Soubor příslušenství ze složky OwnedBeacons a volitelně jeho soubor z KeyAlignmentRecords, který výrazně zrychlí první načtení u příslušenství spárovaného před dlouhou dobou.",
+          "data": {
+            "file": "Příslušenství (.plist)",
+            "alignment": "Zarovnání klíčů (.plist)",
+            "name": "Název"
+          },
+          "data_description": {
+            "name": "Prázdné pro použití názvu modelu"
+          }
+        },
+        "json": {
+          "title": "Soubor JSON",
+          "description": "Příslušenství exportované jako JSON nebo seznam předem vygenerovaných soukromých klíčů štítku DIY.",
+          "data": {
+            "file": "Soubor (.json)",
+            "name": "Název"
+          }
+        },
+        "key": {
+          "title": "Pevný klíč",
+          "description": "Štítek DIY, který vysílá stále stejný klíč.",
+          "data": {
+            "private_key": "Soukromý klíč",
+            "name": "Název"
+          },
+          "data_description": {
+            "private_key": "Base64 (nebo 56 šestnáctkových znaků)"
+          }
+        }
+      },
+      "error": {
+        "invalid_plist": "Tento soubor není seznam vlastností (.plist).",
+        "encrypted_plist": "Tento soubor je stále šifrovaný (macOS 14 a novější): exportujte ho nástrojem, který dešifruje data Find My.",
+        "not_an_accessory": "Tento seznam vlastností není příslušenství Find My.",
+        "invalid_zip": "Tento soubor není zip s daty Find My.",
+        "no_accessory_in_zip": "Nenalezeno žádné příslušenství: zip musí obsahovat složku OwnedBeacons.",
+        "invalid_json": "Tento soubor není příslušenství ani seznam klíčů.",
+        "invalid_key": "Toto není soukromý klíč (28 bajtů, v base64 nebo šestnáctkově).",
+        "upload_missing": "Soubor již byl načten: vyberte soubory znovu."
+      },
+      "abort": {
+        "already_configured": "Toto příslušenství je již přidáno."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Síť Find My",
+        "data": {
+          "scan_interval": "Interval obnovení"
+        },
+        "data_description": {
+          "scan_interval": "Jak často se načítají polohy (15 až 120 minut). Příslušenství odesílá polohu přibližně každých 15 minut: častější dotazy nic nepřinesou a hrozí, že Apple účet omezí."
+        }
+      },
+      "icloud": {
+        "title": "iCloud",
+        "data": {
+          "scan_interval": "Interval obnovení",
+          "with_family": "Zahrnout zařízení rodiny",
+          "locate": "Žádat zařízení o určení polohy"
+        },
+        "data_description": {
+          "scan_interval": "Jak často se dotazuje iCloud (2 až 60 minut)",
+          "locate": "Každé obnovení požádá zařízení o novou polohu jako aplikace Find My. Vypnuto: čte se poslední poloha, kterou zařízení odeslala sama, což šetří jejich baterii."
+        }
+      }
+    }
+  },
+  "selector": {
+    "second_factor": {
+      "options": {
+        "trusted_device": "Moje důvěryhodná zařízení Apple"
+      }
+    }
+  },
+  "exceptions": {
+    "icloud_only": {
+      "message": "{entity} je příslušenství sítě Find My: zvonit, zobrazit zprávu nebo zapnout režim Ztraceno mohou jen zařízení iCloud."
+    },
+    "not_supported": {
+      "message": "{entity} nepodporuje {action}."
+    },
+    "action_failed": {
+      "message": "iCloud akci odmítl: {error}"
+    },
+    "refresh_too_soon": {
+      "message": "Poslední obnovení proběhlo před méně než {seconds} sekundami."
+    },
+    "entry_not_loaded": {
+      "message": "Žádný načtený účet Find My s ID {entry}."
+    }
+  },
+  "services": {
+    "play_sound": {
+      "name": "Přehrát zvuk",
+      "description": "Rozezvoní zařízení iCloud, i v tichém režimu.",
+      "fields": {
+        "subject": {
+          "name": "Předmět",
+          "description": "Název upozornění zobrazeného na zařízení."
+        }
+      }
+    },
+    "display_message": {
+      "name": "Zobrazit zprávu",
+      "description": "Zobrazí zprávu na obrazovce zařízení iCloud.",
+      "fields": {
+        "message": {
+          "name": "Zpráva",
+          "description": "Text zobrazený na zařízení."
+        },
+        "subject": {
+          "name": "Předmět",
+          "description": "Název zprávy."
+        },
+        "sound": {
+          "name": "Zvuk",
+          "description": "Přehrát také zvuk."
+        }
+      }
+    },
+    "lost_mode": {
+      "name": "Režim Ztraceno",
+      "description": "Zapne režim Ztraceno na zařízení iCloud: zařízení se zamkne a zobrazí zprávu a číslo, na které lze volat.",
+      "fields": {
+        "phone_number": {
+          "name": "Telefonní číslo",
+          "description": "Číslo, na které může nálezce zavolat ze zamčeného zařízení."
+        },
+        "message": {
+          "name": "Zpráva",
+          "description": "Text zobrazený na zamčeném zařízení (výchozí text Apple, pokud je prázdné)."
+        }
+      }
+    },
+    "refresh": {
+      "name": "Obnovit",
+      "description": "Načte polohy hned, místo čekání na další obnovení.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Účet",
+          "description": "Pouze tento účet (všechny účty, pokud je prázdné)."
+        }
+      }
+    }
+  }
+}

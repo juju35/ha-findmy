@@ -1,0 +1,269 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Find My",
+        "menu_options": {
+          "icloud": "Cont iCloud (iPhone, iPad, Mac, Apple Watch, AirPods)",
+          "network": "Cont în rețeaua Find My (AirTag-uri și accesorii)"
+        }
+      },
+      "icloud": {
+        "title": "Cont iCloud",
+        "description": "Conectează-te cu contul Apple ale cărui dispozitive vrei să le urmărești.",
+        "data": {
+          "apple_id": "Cont Apple",
+          "password": "Parolă",
+          "with_family": "Include dispozitivele familiei"
+        },
+        "data_description": {
+          "with_family": "Adaugă și dispozitivele membrilor familiei care își partajează locația cu tine"
+        }
+      },
+      "icloud_code": {
+        "title": "Cod de verificare",
+        "description": "Introdu codul de verificare trimis de Apple pe dispozitivele tale Apple de încredere sau prin SMS. Home Assistant devine apoi o sesiune de încredere și codul nu mai este cerut.",
+        "data": {
+          "code": "Cod de verificare"
+        }
+      },
+      "network": {
+        "title": "Cont în rețeaua Find My",
+        "description": "Conectează-te cu contul Apple căruia îi aparțin accesoriile. Locațiile lor sunt preluate din rețeaua Find My.",
+        "data": {
+          "apple_id": "Cont Apple",
+          "password": "Parolă"
+        },
+        "sections": {
+          "advanced": {
+            "name": "Opțiuni avansate",
+            "description": "Apple răspunde doar clienților care trimit date anisette. Implicit sunt generate aici; indică adresa propriului server anisette pentru a-l folosi în schimb.",
+            "data": {
+              "anisette_url": "Server anisette"
+            },
+            "data_description": {
+              "anisette_url": "De exemplu http://192.168.1.10:6969, gol pentru a le genera aici"
+            }
+          }
+        }
+      },
+      "network_method": {
+        "title": "Metodă de verificare",
+        "description": "Cum trebuie să trimită Apple codul de verificare?",
+        "data": {
+          "method": "Trimite codul la"
+        }
+      },
+      "network_code": {
+        "title": "Cod de verificare",
+        "description": "Introdu codul de verificare afișat pe dispozitivele tale Apple de încredere.",
+        "data": {
+          "code": "Cod de verificare"
+        }
+      },
+      "network_sms_code": {
+        "title": "Cod de verificare",
+        "description": "Introdu codul de verificare trimis prin SMS la {phone}.",
+        "data": {
+          "code": "Cod de verificare"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reconectare",
+        "description": "iCloud cere ca {account} să se reconecteze. Introdu parola; poate urma un cod de verificare.",
+        "data": {
+          "password": "Parolă"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Cont Apple sau parolă greșită.",
+      "cannot_connect": "Apple nu poate fi contactat. Încearcă din nou peste câteva minute.",
+      "anisette_error": "Conectarea a eșuat: verifică dacă serverul anisette răspunde sau lasă câmpul gol.",
+      "code_not_sent": "Apple nu a trimis niciun cod de verificare. Încearcă din nou peste câteva minute.",
+      "invalid_code": "Cod de verificare greșit sau expirat.",
+      "no_second_factor": "Acest cont Apple nu are niciun dispozitiv de încredere sau număr de telefon pentru a primi un cod de verificare.",
+      "security_key": "Acest cont Apple se conectează cu o cheie de securitate, care nu este acceptată. Folosește un cont cu coduri de verificare."
+    },
+    "abort": {
+      "already_configured": "Acest cont este deja adăugat.",
+      "reauth_successful": "Reconectat.",
+      "code_not_sent": "Apple nu a trimis niciun cod de verificare. Încearcă din nou peste câteva minute.",
+      "wrong_account": "Acesta nu este contul acestei intrări: conectează-te cu același cont Apple."
+    }
+  },
+  "config_subentries": {
+    "accessory": {
+      "entry_type": "Accesoriu",
+      "initiate_flow": {
+        "user": "Adaugă accesorii"
+      },
+      "step": {
+        "user": {
+          "title": "Adaugă accesorii",
+          "description": "Cheile AirTag-urilor și ale altor accesorii sunt păstrate de aplicația Find My pe un Mac: exportă-le de pe Mac, apoi importă-le aici.",
+          "menu_options": {
+            "archive": "Toate accesoriile dintr-un export (.zip)",
+            "plist": "Un accesoriu (.plist)",
+            "json": "Un accesoriu sau o listă de chei (.json)",
+            "key": "O etichetă cu cheie fixă"
+          }
+        },
+        "archive": {
+          "title": "Importă un export",
+          "description": "Un zip cu datele Find My exportate: este adăugat fiecare accesoriu din dosarul OwnedBeacons, cu numele și alinierea cheilor când zip-ul le conține.",
+          "data": {
+            "file": "Export (.zip)"
+          }
+        },
+        "plist": {
+          "title": "Un accesoriu",
+          "description": "Fișierul accesoriului din OwnedBeacons și, opțional, fișierul lui din KeyAlignmentRecords, care face prima preluare mult mai rapidă pentru un accesoriu asociat demult.",
+          "data": {
+            "file": "Accesoriu (.plist)",
+            "alignment": "Alinierea cheilor (.plist)",
+            "name": "Nume"
+          },
+          "data_description": {
+            "name": "Gol pentru a folosi numele modelului"
+          }
+        },
+        "json": {
+          "title": "Fișier JSON",
+          "description": "Un accesoriu exportat ca JSON sau o listă de chei private pregenerate ale unei etichete DIY.",
+          "data": {
+            "file": "Fișier (.json)",
+            "name": "Nume"
+          }
+        },
+        "key": {
+          "title": "Cheie fixă",
+          "description": "O etichetă DIY care emite mereu aceeași cheie.",
+          "data": {
+            "private_key": "Cheie privată",
+            "name": "Nume"
+          },
+          "data_description": {
+            "private_key": "Base64 (sau 56 de caractere hexazecimale)"
+          }
+        }
+      },
+      "error": {
+        "invalid_plist": "Acest fișier nu este o listă de proprietăți (.plist).",
+        "encrypted_plist": "Acest fișier este încă criptat (macOS 14 și ulterior): exportă-l cu un instrument care decriptează datele Find My.",
+        "not_an_accessory": "Această listă de proprietăți nu este un accesoriu Find My.",
+        "invalid_zip": "Acest fișier nu este un zip cu datele Find My.",
+        "no_accessory_in_zip": "Niciun accesoriu găsit: zip-ul trebuie să conțină dosarul OwnedBeacons.",
+        "invalid_json": "Acest fișier nu este nici accesoriu, nici listă de chei.",
+        "invalid_key": "Nu este o cheie privată (28 de octeți, în base64 sau hexazecimal).",
+        "upload_missing": "Fișierul a fost deja citit: alege din nou fișierele."
+      },
+      "abort": {
+        "already_configured": "Acest accesoriu este deja adăugat."
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Rețeaua Find My",
+        "data": {
+          "scan_interval": "Interval de actualizare"
+        },
+        "data_description": {
+          "scan_interval": "Cât de des sunt preluate locațiile (între 15 și 120 de minute). Accesoriile își trimit poziția cam la fiecare 15 minute: a întreba mai des nu aduce nimic și riscă limitarea contului de către Apple."
+        }
+      },
+      "icloud": {
+        "title": "iCloud",
+        "data": {
+          "scan_interval": "Interval de actualizare",
+          "with_family": "Include dispozitivele familiei",
+          "locate": "Cere dispozitivelor să se localizeze"
+        },
+        "data_description": {
+          "scan_interval": "Cât de des este interogat iCloud (între 2 și 60 de minute)",
+          "locate": "Fiecare actualizare cere dispozitivelor o poziție nouă, ca aplicația Find My. Dezactivat, se citește ultima poziție trimisă singure de dispozitive, ceea ce le cruță bateria."
+        }
+      }
+    }
+  },
+  "selector": {
+    "second_factor": {
+      "options": {
+        "trusted_device": "Dispozitivele mele Apple de încredere"
+      }
+    }
+  },
+  "exceptions": {
+    "icloud_only": {
+      "message": "{entity} este un accesoriu al rețelei Find My: doar dispozitivele iCloud pot suna, afișa un mesaj sau activa modul Pierdut."
+    },
+    "not_supported": {
+      "message": "{entity} nu acceptă {action}."
+    },
+    "action_failed": {
+      "message": "iCloud a refuzat acțiunea: {error}"
+    },
+    "refresh_too_soon": {
+      "message": "Ultima actualizare a fost acum mai puțin de {seconds} secunde."
+    },
+    "entry_not_loaded": {
+      "message": "Niciun cont Find My încărcat cu ID-ul {entry}."
+    }
+  },
+  "services": {
+    "play_sound": {
+      "name": "Redă un sunet",
+      "description": "Face un dispozitiv iCloud să sune, chiar și pe silențios.",
+      "fields": {
+        "subject": {
+          "name": "Subiect",
+          "description": "Titlul alertei afișate pe dispozitiv."
+        }
+      }
+    },
+    "display_message": {
+      "name": "Afișează un mesaj",
+      "description": "Afișează un mesaj pe ecranul unui dispozitiv iCloud.",
+      "fields": {
+        "message": {
+          "name": "Mesaj",
+          "description": "Text afișat pe dispozitiv."
+        },
+        "subject": {
+          "name": "Subiect",
+          "description": "Titlul mesajului."
+        },
+        "sound": {
+          "name": "Sunet",
+          "description": "Redă și un sunet."
+        }
+      }
+    },
+    "lost_mode": {
+      "name": "Modul Pierdut",
+      "description": "Activează modul Pierdut pe un dispozitiv iCloud: se blochează și afișează mesajul și un număr de apelat.",
+      "fields": {
+        "phone_number": {
+          "name": "Număr de telefon",
+          "description": "Numărul pe care îl poate suna cel care îl găsește de pe dispozitivul blocat."
+        },
+        "message": {
+          "name": "Mesaj",
+          "description": "Text afișat pe dispozitivul blocat (textul implicit Apple dacă e gol)."
+        }
+      }
+    },
+    "refresh": {
+      "name": "Actualizează",
+      "description": "Preia locațiile acum în loc să aștepte următoarea actualizare.",
+      "fields": {
+        "config_entry_id": {
+          "name": "Cont",
+          "description": "Doar acest cont (toate conturile dacă e gol)."
+        }
+      }
+    }
+  }
+}

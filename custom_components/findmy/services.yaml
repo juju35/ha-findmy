@@ -1,0 +1,56 @@
+play_sound:
+  target:
+    entity:
+      integration: findmy
+      domain: device_tracker
+  fields:
+    subject:
+      example: "Find My"
+      selector:
+        text:
+
+display_message:
+  target:
+    entity:
+      integration: findmy
+      domain: device_tracker
+  fields:
+    message:
+      required: true
+      example: "Dinner is ready"
+      selector:
+        text:
+          multiline: true
+    subject:
+      example: "Find My"
+      selector:
+        text:
+    sound:
+      default: false
+      selector:
+        boolean:
+
+lost_mode:
+  target:
+    entity:
+      integration: findmy
+      domain: device_tracker
+  fields:
+    phone_number:
+      required: true
+      example: "+33 6 12 34 56 78"
+      selector:
+        text:
+          type: tel
+    message:
+      example: "This device is lost. Please call me."
+      selector:
+        text:
+          multiline: true
+
+refresh:
+  fields:
+    config_entry_id:
+      selector:
+        config_entry:
+          integration: findmy
