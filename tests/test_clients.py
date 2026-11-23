@@ -6,9 +6,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
+import aiohttp
 import pytest
 import requests
 from findmy import InvalidCredentialsError, LoginState, UnauthorizedError
+from findmy.errors import EmptyResponseError
 from homeassistant.core import HomeAssistant
 from pyicloud.exceptions import PyiCloud2FARequiredException, PyiCloudFailedLoginException
 
@@ -22,7 +24,7 @@ from custom_components.findmy.icloud import (
 )
 from custom_components.findmy.importer import accessory_from_plist
 from custom_components.findmy.models import battery_state_from_status
-from custom_components.findmy.network import NetworkAuthError, NetworkClient, NetworkInvalidCredentials
+from custom_components.findmy.network import NetworkAuthError, NetworkClient, NetworkError, NetworkInvalidCredentials
 
 from .conftest import beacon_plist
 
@@ -208,3 +210,66 @@ async def test_network_client_invalid_credentials() -> None:
             await client.login("jane@example.com", "pw", "http://ani:6969")
     finally:
         await client.close()
+
+
+@pytest.mark.parametrize(
+    "error",
+    [
+        aiohttp.ServerDisconnectedError(),
+        aiohttp.InvalidURL("ani"),
+        EmptyResponseError("empty"),
+        aiohttp.ClientResponseError(MagicMock(), (), status=503),
+    ],
+)
+async def test_network_client_transport_errors(error: Exception) -> None:
+    """Failures that are not about the account become NetworkError, at sign-in and at fetch."""
+    account = MagicMock()
+    account.login = AsyncMock(side_effect=error)
+    account.close = AsyncMock()
+    client = NetworkClient("test")
+    try:
+        with patch("custom_components.findmy.network.AsyncAppleAccount", return_value=account):
+            with pytest.raises(NetworkError) as raised:
+                await client.login("jane@example.com", "pw", "http://ani:6969")
+            assert not isinstance(raised.value, NetworkAuthError)
+            account.login = AsyncMock(return_value=LoginState.LOGGED_IN)
+            account.login_state = LoginState.LOGGED_IN
+            await client.login("jane@example.com", "pw", None)
+        await client.set_accessories({"sub": (KIND_ACCESSORY, accessory_from_plist(beacon_plist()).data, None, None)})
+
+        async def failing(devices):
+            raise error
+
+        account.fetch_location = failing
+        with pytest.raises(NetworkError) as raised:
+            await client.fetch(10)
+        assert not isinstance(raised.value, NetworkAuthError)
+    finally:
+        await client.close()
+
+
+async def test_network_client_half_signed_in() -> None:
+    account = MagicMock()
+    account.login = AsyncMock(return_value=LoginState.AUTHENTICATED)
+    account.close = AsyncMock()
+    client = NetworkClient("test")
+    try:
+        with (
+            patch("custom_components.findmy.network.AsyncAppleAccount", return_value=account),
+            pytest.raises(NetworkError, match="Unexpected sign-in state"),
+        ):
+            await client.login("jane@example.com", "pw", None)
+    finally:
+        await client.close()
+
+
+async def test_icloud_actions_need_a_session(hass: HomeAssistant, tmp_path: Path) -> None:
+    client = ICloudClient(hass, "jane@example.com", "pw", str(tmp_path), True)
+    with pytest.raises(ICloudError, match="Not signed in"):
+        await client.play_sound("abc==", "Find My")
+    api = MagicMock(requires_2fa=False, requires_2sa=False)
+    api.devices.devices = {}
+    with patch("custom_components.findmy.icloud.PyiCloudService", return_value=api):
+        await client.connect()
+    with pytest.raises(ICloudError, match="no longer listed"):
+        await client.lost_mode("gone", "+33", "")

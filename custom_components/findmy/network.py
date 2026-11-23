@@ -12,6 +12,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import aiohttp
+
 from findmy import (
     AsyncAppleAccount,
     FindMyAccessory,
@@ -35,6 +37,11 @@ from .worker import Worker
 _LOGGER = logging.getLogger(__name__)
 
 Accessory = FindMyAccessory | FixedRollingKeyPairAccessory | KeyPair
+
+# Failures of a request that are not about the account: network, HTTP status, anisette server, empty or unexpected
+# answers (the library raises RuntimeError subclasses for those). Each is turned into a NetworkError, so that the
+# config flow shows an error and the coordinator records a failed fetch instead of an unexpected exception.
+_TRANSPORT_ERRORS = (aiohttp.ClientError, OSError, RuntimeError, ValueError)
 
 
 class NetworkError(Exception):
@@ -96,11 +103,14 @@ class NetworkClient:
                 state = await self._account.login(email, password)
             except InvalidCredentialsError as err:
                 raise NetworkInvalidCredentials(str(err)) from err
-            except (UnhandledProtocolError, UnauthorizedError) as err:
+            except (UnauthorizedError, *_TRANSPORT_ERRORS) as err:
                 raise NetworkError(str(err)) from err
-            except OSError as err:
-                raise NetworkError(str(err)) from err
-            return state == LoginState.REQUIRE_2FA
+            if state == LoginState.REQUIRE_2FA:
+                return True
+            if state != LoginState.LOGGED_IN:
+                # Signed in half-way: the session would not fetch anything.
+                raise NetworkError(f"Unexpected sign-in state {state}")
+            return False
 
         return await self._worker.run(_login, timeout=120)
 
@@ -111,7 +121,7 @@ class NetworkClient:
             assert self._account is not None
             try:
                 self._methods = list(await self._account.get_2fa_methods())
-            except (UnhandledProtocolError, UnauthorizedError, OSError) as err:
+            except (UnauthorizedError, *_TRANSPORT_ERRORS) as err:
                 raise NetworkError(str(err)) from err
             result = []
             for index, method in enumerate(self._methods):
@@ -130,7 +140,7 @@ class NetworkClient:
             self._method = self._methods[index]
             try:
                 await self._method.request()
-            except (UnhandledProtocolError, UnauthorizedError, OSError) as err:
+            except (UnauthorizedError, *_TRANSPORT_ERRORS) as err:
                 raise NetworkError(str(err)) from err
 
         await self._worker.run(_request, timeout=60)
@@ -145,7 +155,7 @@ class NetworkClient:
             except (UnhandledProtocolError, UnauthorizedError) as err:
                 _LOGGER.debug("Verification code refused: %s", err)
                 return False
-            except OSError as err:
+            except _TRANSPORT_ERRORS as err:
                 raise NetworkError(str(err)) from err
             return state == LoginState.LOGGED_IN
 
@@ -214,8 +224,8 @@ class NetworkClient:
                 reports = await self._account.fetch_location(list(by_obj))
             except (UnauthorizedError, InvalidStateError) as err:
                 raise NetworkAuthError(str(err)) from err
-            except (UnhandledProtocolError, OSError) as err:
-                raise NetworkError(str(err)) from err
+            except _TRANSPORT_ERRORS as err:
+                raise NetworkError(f"{type(err).__name__}: {err}") from err
             return {by_obj[obj]: _report(report) for obj, report in reports.items() if obj in by_obj}
 
         return await self._worker.run(_fetch, timeout=timeout)

@@ -145,8 +145,14 @@ class ICloudClient:
         return await self._run(_fetch)
 
     def _device(self, device_id: str) -> Any:
-        assert self._api is not None
-        return self._api.devices.devices[device_id]
+        # Before the first sign-in (a few seconds after start-up) or after iCloud ended the session, there is nothing
+        # to act on yet; a device can also have left the account since the last fetch.
+        if self._api is None or self._api.requires_2fa or self._api.requires_2sa:
+            raise ICloudError("Not signed in to iCloud yet")
+        try:
+            return self._api.devices.devices[device_id]
+        except KeyError as err:
+            raise ICloudError("This device is no longer listed by iCloud") from err
 
     async def play_sound(self, device_id: str, subject: str) -> None:
         """Make the device ring."""
