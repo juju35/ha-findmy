@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 - 2026-11-23
+
+### Fixes
+- Accessories: the Mac's encrypted `.record` files, given alone or in a zip, are recognised and reported as still encrypted instead of being ignored or called invalid
+- README: the real location of the Find My data on recent macOS releases, and the decryption step needed before importing
+
 ## 1.0.0 - 2026-11-23
 
 ### Features

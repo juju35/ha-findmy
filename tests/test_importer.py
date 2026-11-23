@@ -51,6 +51,8 @@ def test_plist_without_name_uses_model() -> None:
         (b"not a plist", "invalid_plist"),
         (plistlib.dumps({"encryptedData": b"\x01\x02"}), "encrypted_plist"),
         (plistlib.dumps({"foo": "bar"}), "not_an_accessory"),
+        (plistlib.dumps([b"nonce", b"tag", b"ciphertext"], fmt=plistlib.FMT_BINARY), "encrypted_plist"),
+        (plistlib.dumps(["a", "b"]), "invalid_plist"),
     ],
 )
 def test_plist_errors(content: bytes, reason: str) -> None:
@@ -99,6 +101,34 @@ def test_zip_errors() -> None:
     with pytest.raises(ImportError_) as err:
         accessories_from_zip(_zip({"OwnedBeacons/a.plist": plistlib.dumps({"encryptedData": b"\x01"})}))
     assert err.value.reason == "encrypted_plist"
+
+
+SEALED = plistlib.dumps([b"nonce", b"tag", b"ciphertext"], fmt=plistlib.FMT_BINARY)
+
+
+@pytest.mark.parametrize("record", [SEALED, b"\x00not a plist"])
+def test_zip_of_mac_records_is_encrypted(record: bytes) -> None:
+    """A zip of the Mac's `.record` files, not decrypted first, says so instead of finding nothing."""
+    content = _zip(
+        {
+            f"Storage/OwnedBeacons/{ID_A}.record": record,
+            f"Storage/OwnedBeacons/{ID_B}.record": record,
+            f"Storage/KeyAlignmentRecords/{ID_A}.record": record,
+        }
+    )
+    with pytest.raises(ImportError_) as err:
+        accessories_from_zip(content)
+    assert err.value.reason == "encrypted_plist"
+
+
+def test_zip_mixing_decrypted_and_sealed_records() -> None:
+    content = _zip(
+        {
+            f"OwnedBeacons/{ID_A}.plist": beacon_bytes(identifier=ID_A),
+            f"OwnedBeacons/{ID_B}.record": SEALED,
+        }
+    )
+    assert [spec.unique_id for spec in accessories_from_zip(content)] == [ID_A]
 
 
 def test_json_accessory_roundtrip() -> None:

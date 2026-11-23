@@ -94,14 +94,18 @@ Choose where the verification code is sent (trusted devices or a phone number), 
 
 | Choice | What to give |
 |---|---|
-| Every accessory from an export (.zip) | A zip of the exported Find My data: every accessory of its `OwnedBeacons` folder is added, named after `BeaconNamingRecord` and aligned with `KeyAlignmentRecords` |
-| One accessory (.plist) | The accessory's file from `OwnedBeacons`, and optionally its `KeyAlignmentRecords` file |
+| Every accessory from an export (.zip) | A zip of the decrypted Find My data: every accessory of its `OwnedBeacons` folder is added, named after `BeaconNamingRecord` and aligned with `KeyAlignmentRecords` |
+| One accessory (.plist) | The accessory's decrypted file from `OwnedBeacons`, and optionally its `KeyAlignmentRecords` file |
 | One accessory or a list of keys (.json) | An accessory exported as JSON, or a list of private keys of a DIY tag |
 | A tag with a static key | The base64 private key of a DIY tag that always broadcasts the same key |
 
 ### Exporting the keys of your accessories
 
-The Find My app on a Mac keeps the keys of every accessory of the account, one property list per accessory in the `OwnedBeacons` folder of its data (`~/Library/com.apple.icloud.searchpartyd/`). On macOS 13 and earlier the files are readable as they are: zip the `OwnedBeacons`, `BeaconNamingRecord` and `KeyAlignmentRecords` folders and import the zip. From macOS 14, these files are encrypted with a key kept in the Mac's keychain: export them with a tool that decrypts the Find My data (the integration says so when it is given an encrypted file).
+The Find My app on a Mac keeps the keys of every accessory of the account, one record per accessory in the `OwnedBeacons` folder of its data. On recent macOS releases this data is in `~/Library/Group Containers/group.com.apple.icloud.searchpartyuseragent/Library/Storage/` (older releases used `~/Library/com.apple.icloud.searchpartyd/`), next to the `BeaconNamingRecord` and `KeyAlignmentRecords` folders.
+
+These `.record` files are **encrypted** with a key that never leaves the Mac's keychain, so Home Assistant cannot read them as they are. On the Mac, first decrypt them into property lists (`.plist`) with a tool that decrypts the Find My data, then zip the decrypted `OwnedBeacons`, `BeaconNamingRecord` and `KeyAlignmentRecords` folders and import the zip. Given a file or a zip that is still encrypted, the integration says so instead of importing nothing. Only the property lists of old macOS releases (13 and earlier) are readable without this step.
+
+The exported files hold the private keys of your accessories: keep them to yourself and delete the copies once imported.
 
 The key alignment (`KeyAlignmentRecords`) is optional but worth it: without it, the first fetch of an accessory paired long ago derives its keys from the pairing date, which takes a while (once only: the integration then saves where it is).
 

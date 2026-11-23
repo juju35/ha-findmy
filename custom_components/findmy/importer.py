@@ -63,13 +63,22 @@ def _read_plist(content: bytes) -> dict[str, Any]:
         data = plistlib.loads(content)
     except (plistlib.InvalidFileException, ValueError, binascii.Error) as err:
         raise ImportError_("invalid_plist") from err
+    if _is_sealed(data):
+        raise ImportError_("encrypted_plist")
     if not isinstance(data, dict):
         raise ImportError_("invalid_plist")
     return data
 
 
+def _is_sealed(data: Any) -> bool:
+    """A `.record` file as the Mac stores it: a sealed box (nonce, tag, ciphertext), not the keys."""
+    return isinstance(data, bytes) or (
+        isinstance(data, list) and bool(data) and all(isinstance(v, bytes) for v in data)
+    )
+
+
 def _is_encrypted(data: dict[str, Any]) -> bool:
-    """macOS 14+ keeps the beacon records encrypted (a ChaCha/AES box), not the plain keys."""
+    """A record still sealed with the Mac's key, in a box or a dict of raw bytes, not the plain keys."""
     return "privateKey" not in data and any(isinstance(v, bytes) for v in data.values())
 
 
@@ -88,8 +97,11 @@ def accessory_from_plist(
     return _accessory_spec(accessory, name)
 
 
-def _zip_records(content: bytes) -> dict[str, list[tuple[PurePosixPath, dict[str, Any]]]]:
-    """The plist records of an export, by folder (OwnedBeacons, KeyAlignmentRecords, BeaconNamingRecord)."""
+def _zip_records(content: bytes) -> tuple[dict[str, list[tuple[PurePosixPath, dict[str, Any]]]], int]:
+    """The plist records of an export, by folder (OwnedBeacons, KeyAlignmentRecords, BeaconNamingRecord).
+
+    Also counts the accessories left sealed (the Mac's `.record` files, not decrypted first).
+    """
     try:
         archive = zipfile.ZipFile(io.BytesIO(content))
     except zipfile.BadZipFile as err:
@@ -98,9 +110,10 @@ def _zip_records(content: bytes) -> dict[str, list[tuple[PurePosixPath, dict[str
     if len(infos) > MAX_ZIP_ENTRIES or sum(i.file_size for i in infos) > MAX_ZIP_SIZE:
         raise ImportError_("invalid_zip")
     records: dict[str, list[tuple[PurePosixPath, dict[str, Any]]]] = {}
+    sealed = 0
     for info in infos:
         path = PurePosixPath(info.filename)
-        if info.is_dir() or path.suffix.lower() != ".plist" or "__MACOSX" in path.parts:
+        if info.is_dir() or path.suffix.lower() not in (".plist", ".record") or "__MACOSX" in path.parts:
             continue
         folder = next(
             (part for part in path.parts if part in ("OwnedBeacons", "KeyAlignmentRecords", "BeaconNamingRecord")),
@@ -111,18 +124,21 @@ def _zip_records(content: bytes) -> dict[str, list[tuple[PurePosixPath, dict[str
         try:
             data = plistlib.loads(archive.read(info))
         except (plistlib.InvalidFileException, ValueError):
+            sealed += folder == "OwnedBeacons" and path.suffix.lower() == ".record"
             continue
         if isinstance(data, dict):
             records.setdefault(folder, []).append((path, data))
-    return records
+        elif folder == "OwnedBeacons" and _is_sealed(data):
+            sealed += 1
+    return records, sealed
 
 
 def accessories_from_zip(content: bytes) -> list[AccessorySpec]:
     """Every accessory of a zipped export of the Find My data, with its name and alignment."""
-    records = _zip_records(content)
+    records, sealed = _zip_records(content)
     beacons = records.get("OwnedBeacons", [])
     if not beacons:
-        raise ImportError_("no_accessory_in_zip")
+        raise ImportError_("encrypted_plist" if sealed else "no_accessory_in_zip")
 
     names: dict[str, str] = {}
     for path, data in records.get("BeaconNamingRecord", []):
@@ -137,7 +153,7 @@ def accessories_from_zip(content: bytes) -> list[AccessorySpec]:
         alignments[str(beacon)] = data
 
     specs: list[AccessorySpec] = []
-    encrypted = 0
+    encrypted = sealed
     for path, data in beacons:
         if _is_encrypted(data):
             encrypted += 1
