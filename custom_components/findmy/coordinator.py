@@ -10,6 +10,7 @@ from __future__ import annotations
 import logging
 import time
 from abc import abstractmethod
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -71,6 +72,8 @@ class FindMyCoordinator(DataUpdateCoordinator[dict[str, DeviceState]]):
         self.last_fetch_ok: bool | None = None
         self.last_error: str | None = None
         self._closed = False
+        self._status_listeners: list[Callable[[], None]] = []
+        self._forget_listeners: list[Callable[[str], None]] = []
         self.data = {}
 
     async def async_load(self) -> None:
@@ -100,6 +103,9 @@ class FindMyCoordinator(DataUpdateCoordinator[dict[str, DeviceState]]):
         except UpdateFailed as err:
             self._fetch_done(started, False, str(err))
             raise
+        except Exception as err:  # noqa: BLE001 - any failure is recorded as such, never left out of the status
+            self._fetch_done(started, False, f"{type(err).__name__}: {err}")
+            raise UpdateFailed(f"Unexpected error: {err}") from err
         self._fetch_done(started, True, None)
         self._save(data)
         return data
@@ -110,6 +116,22 @@ class FindMyCoordinator(DataUpdateCoordinator[dict[str, DeviceState]]):
         self.last_fetch_duration = round(time.monotonic() - started, 1)
         self.last_fetch_ok = ok
         self.last_error = error
+        # The account entities show the fetch itself: they are told after every fetch, even when the devices did not
+        # change (the coordinator only notifies its listeners when the data changes).
+        for listener in list(self._status_listeners):
+            listener()
+
+    @callback
+    def async_add_status_listener(self, listener: Callable[[], None]) -> Callable[[], None]:
+        """Call `listener` after every fetch, successful or not; returns the function that removes it."""
+        self._status_listeners.append(listener)
+        return lambda: self._status_listeners.remove(listener)
+
+    @callback
+    def async_add_forget_listener(self, listener: Callable[[str], None]) -> Callable[[], None]:
+        """Call `listener` with the id of each device the user removes; returns the function that removes it."""
+        self._forget_listeners.append(listener)
+        return lambda: self._forget_listeners.remove(listener)
 
     @abstractmethod
     async def _fetch(self) -> dict[str, DeviceState]:
@@ -140,10 +162,12 @@ class FindMyCoordinator(DataUpdateCoordinator[dict[str, DeviceState]]):
 
     @callback
     def forget_device(self, device_id: str) -> None:
-        """Drop a device the user removed from Home Assistant."""
+        """Drop a device the user removed from Home Assistant; it comes back at the next fetch if Apple lists it."""
         if self.data and device_id in self.data:
             self.data = {key: value for key, value in self.data.items() if key != device_id}
             self._save()
+        for listener in list(self._forget_listeners):
+            listener(device_id)
 
 
 class NetworkCoordinator(FindMyCoordinator):

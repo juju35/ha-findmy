@@ -76,6 +76,10 @@ class FindMyAccountEntity(CoordinatorEntity[FindMyCoordinator]):
     def available(self) -> bool:
         return True
 
+    async def async_added_to_hass(self) -> None:
+        await super().async_added_to_hass()
+        self.async_on_remove(self.coordinator.async_add_status_listener(self.async_write_ha_state))
+
 
 def described_entities(
     coordinator: FindMyCoordinator, entity_class: Callable[..., Entity], descriptions: Iterable[Any]
@@ -115,8 +119,14 @@ def add_device_entities(
             else:
                 async_add_entities(entities)
 
+    @callback
+    def _forget(device_id: str) -> None:
+        # The device's entities were removed with it: created again if it comes back.
+        known.discard(device_id)
+
     _add_new()
     entry.async_on_unload(coordinator.async_add_listener(_add_new))
+    entry.async_on_unload(coordinator.async_add_forget_listener(_forget))
 
 
 def setup_described_platform(

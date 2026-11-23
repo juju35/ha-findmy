@@ -31,6 +31,11 @@ def async_register_services(hass: HomeAssistant) -> None:
                 translation_placeholders={"entry": entry_id},
             )
         for entry in entries:
-            await entry.runtime_data.async_manual_refresh()
+            try:
+                await entry.runtime_data.async_manual_refresh()
+            except ServiceValidationError:
+                # Refreshed a moment ago: reported when that account was asked for, skipped among all of them.
+                if entry_id:
+                    raise
 
     hass.services.async_register(DOMAIN, SERVICE_REFRESH, _refresh, schema=SCHEMA_REFRESH)

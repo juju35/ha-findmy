@@ -14,6 +14,7 @@ from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from pytest_homeassistant_custom_component.common import MockConfigEntry, async_fire_time_changed
 
+from custom_components.findmy import async_remove_config_entry_device
 from custom_components.findmy.const import DOMAIN
 from custom_components.findmy.icloud import ICloudAuthError, ICloudError
 from custom_components.findmy.network import NetworkAuthError, NetworkError
@@ -225,8 +226,11 @@ async def test_refresh_action_is_throttled(
 ) -> None:
     await _setup(hass, network_entry, freezer)
     network_client.fetch.reset_mock()
+    # Too soon: an error when the account is named, skipped when every account is refreshed.
     with pytest.raises(ServiceValidationError):
-        await hass.services.async_call(DOMAIN, "refresh", {}, blocking=True)
+        await hass.services.async_call(DOMAIN, "refresh", {"config_entry_id": network_entry.entry_id}, blocking=True)
+    await hass.services.async_call(DOMAIN, "refresh", {}, blocking=True)
+    network_client.fetch.assert_not_awaited()
     freezer.tick(timedelta(minutes=6))
     await hass.services.async_call(DOMAIN, "refresh", {"config_entry_id": network_entry.entry_id}, blocking=True)
     network_client.fetch.assert_awaited_once()
@@ -257,3 +261,75 @@ async def test_icloud_auth_error_during_refresh(
     await icloud_entry.runtime_data.async_refresh()
     await hass.async_block_till_done()
     assert any(f["context"]["source"] == SOURCE_REAUTH for f in hass.config_entries.flow.async_progress())
+
+
+def _account_state(hass: HomeAssistant, platform: str, suffix: str):
+    return next(s for s in hass.states.async_all(platform) if s.entity_id.endswith(suffix))
+
+
+async def test_last_fetch_updates_without_changes(
+    hass: HomeAssistant, network_entry: MockConfigEntry, network_client: MagicMock, freezer: FrozenDateTimeFactory
+) -> None:
+    """The account entities follow every fetch, even when no device changed."""
+    network_client.fetch.return_value = {_subentry_id(network_entry): report()}
+    await _setup(hass, network_entry, freezer)
+    first = _account_state(hass, "sensor", "last_fetch").state
+    freezer.tick(timedelta(minutes=16))
+    async_fire_time_changed(hass)
+    await hass.async_block_till_done(wait_background_tasks=True)
+    assert network_client.fetch.await_count == 2
+    assert _account_state(hass, "sensor", "last_fetch").state != first
+
+    # Two failures in a row: still recorded, each time.
+    network_client.fetch.side_effect = NetworkError("down")
+    for _ in range(2):
+        freezer.tick(timedelta(minutes=16))
+        async_fire_time_changed(hass)
+        await hass.async_block_till_done(wait_background_tasks=True)
+        state = _account_state(hass, "sensor", "last_fetch")
+        assert state.attributes["result"] == "error"
+        assert _account_state(hass, "binary_sensor", "fetch_problem").state == "on"
+    assert network_client.fetch.await_count == 4
+
+
+async def test_unexpected_error_is_recorded(
+    hass: HomeAssistant, network_entry: MockConfigEntry, network_client: MagicMock, freezer: FrozenDateTimeFactory
+) -> None:
+    network_client.fetch.side_effect = KeyError("surprise")
+    await _setup(hass, network_entry, freezer)
+    assert _account_state(hass, "binary_sensor", "fetch_problem").state == "on"
+    assert "KeyError" in _account_state(hass, "sensor", "last_fetch").attributes["error"]
+
+
+async def test_refresh_all_skips_recent_accounts(
+    hass: HomeAssistant,
+    network_entry: MockConfigEntry,
+    network_client: MagicMock,
+    icloud_entry: MockConfigEntry,
+    icloud_client: MagicMock,
+    freezer: FrozenDateTimeFactory,
+) -> None:
+    await _setup(hass, network_entry, freezer)
+    await _setup(hass, icloud_entry, freezer)
+    freezer.tick(timedelta(minutes=1))  # iCloud may refresh again, the Find My network not yet
+    icloud_client.fetch.reset_mock()
+    await hass.services.async_call(DOMAIN, "refresh", {}, blocking=True)
+    icloud_client.fetch.assert_awaited_once()
+
+
+async def test_removed_icloud_device_comes_back(
+    hass: HomeAssistant, icloud_entry: MockConfigEntry, icloud_client: MagicMock, freezer: FrozenDateTimeFactory
+) -> None:
+    await _setup(hass, icloud_entry, freezer)
+    device = next(
+        d
+        for d in dr.async_entries_for_config_entry(dr.async_get(hass), icloud_entry.entry_id)
+        if (DOMAIN, "dev1") in d.identifiers
+    )
+    assert await async_remove_config_entry_device(hass, icloud_entry, device)
+    dr.async_get(hass).async_remove_device(device.id)
+    await hass.async_block_till_done()
+    assert hass.states.get("device_tracker.jane_s_iphone") is None
+    await icloud_entry.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+    assert hass.states.get("device_tracker.jane_s_iphone").attributes["latitude"] == 48.11
