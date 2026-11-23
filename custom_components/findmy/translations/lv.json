@@ -155,7 +155,8 @@
         "invalid_zip": "Šis fails nav Find My datu zip.",
         "no_accessory_in_zip": "Nav atrasts neviens piederums: zip jāietver mape OwnedBeacons.",
         "invalid_json": "Šis fails nav ne piederums, ne atslēgu saraksts.",
-        "invalid_key": "Šī nav privātā atslēga (28 baiti, base64 vai heksadecimāli)."
+        "invalid_key": "Šī nav privātā atslēga (28 baiti, base64 vai heksadecimāli).",
+        "upload_missing": "Fails jau ir nolasīts: izvēlieties failus vēlreiz."
       },
       "abort": {
         "already_configured": "Šis piederums jau ir pievienots."

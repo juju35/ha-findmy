@@ -155,7 +155,8 @@
         "invalid_zip": "Ten plik nie jest plikiem zip z danymi Find My.",
         "no_accessory_in_zip": "Nie znaleziono akcesorium: zip musi zawierać folder OwnedBeacons.",
         "invalid_json": "Ten plik nie jest akcesorium ani listą kluczy.",
-        "invalid_key": "To nie jest klucz prywatny (28 bajtów, w base64 lub szesnastkowo)."
+        "invalid_key": "To nie jest klucz prywatny (28 bajtów, w base64 lub szesnastkowo).",
+        "upload_missing": "Plik został już odczytany: wybierz pliki ponownie."
       },
       "abort": {
         "already_configured": "To akcesorium jest już dodane."

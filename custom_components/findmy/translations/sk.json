@@ -155,7 +155,8 @@
         "invalid_zip": "Tento súbor nie je zip s údajmi Find My.",
         "no_accessory_in_zip": "Nenašlo sa žiadne príslušenstvo: zip musí obsahovať priečinok OwnedBeacons.",
         "invalid_json": "Tento súbor nie je príslušenstvo ani zoznam kľúčov.",
-        "invalid_key": "Toto nie je súkromný kľúč (28 bajtov, v base64 alebo šestnástkovo)."
+        "invalid_key": "Toto nie je súkromný kľúč (28 bajtov, v base64 alebo šestnástkovo).",
+        "upload_missing": "Súbor už bol načítaný: vyberte súbory znova."
       },
       "abort": {
         "already_configured": "Toto príslušenstvo je už pridané."

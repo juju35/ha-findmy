@@ -155,7 +155,8 @@
         "invalid_zip": "Dit bestand is geen zip van de Find My-gegevens.",
         "no_accessory_in_zip": "Geen accessoire gevonden: de zip moet de map OwnedBeacons bevatten.",
         "invalid_json": "Dit bestand is geen accessoire en geen lijst met sleutels.",
-        "invalid_key": "Dit is geen privésleutel (28 bytes, in base64 of hexadecimaal)."
+        "invalid_key": "Dit is geen privésleutel (28 bytes, in base64 of hexadecimaal).",
+        "upload_missing": "Het bestand is al gelezen: kies de bestanden opnieuw."
       },
       "abort": {
         "already_configured": "Dit accessoire is al toegevoegd."

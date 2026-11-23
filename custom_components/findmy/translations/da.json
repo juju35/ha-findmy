@@ -155,7 +155,8 @@
         "invalid_zip": "Denne fil er ikke en zip med Find My-data.",
         "no_accessory_in_zip": "Intet tilbehør fundet: zip-filen skal indeholde mappen OwnedBeacons.",
         "invalid_json": "Denne fil er hverken et tilbehør eller en liste med nøgler.",
-        "invalid_key": "Dette er ikke en privat nøgle (28 byte, i base64 eller hexadecimal)."
+        "invalid_key": "Dette er ikke en privat nøgle (28 byte, i base64 eller hexadecimal).",
+        "upload_missing": "Filen er allerede læst: vælg filerne igen."
       },
       "abort": {
         "already_configured": "Dette tilbehør er allerede tilføjet."

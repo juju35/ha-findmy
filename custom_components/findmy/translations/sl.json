@@ -155,7 +155,8 @@
         "invalid_zip": "Ta datoteka ni zip s podatki Find My.",
         "no_accessory_in_zip": "Ni najdenega dodatka: zip mora vsebovati mapo OwnedBeacons.",
         "invalid_json": "Ta datoteka ni dodatek ne seznam ključev.",
-        "invalid_key": "To ni zasebni ključ (28 bajtov, v base64 ali šestnajstiško)."
+        "invalid_key": "To ni zasebni ključ (28 bajtov, v base64 ali šestnajstiško).",
+        "upload_missing": "Datoteka je že prebrana: znova izberite datoteke."
       },
       "abort": {
         "already_configured": "Ta dodatek je že dodan."

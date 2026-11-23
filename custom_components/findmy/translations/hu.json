@@ -155,7 +155,8 @@
         "invalid_zip": "Ez a fájl nem a Find My-adatok zip-fájlja.",
         "no_accessory_in_zip": "Nem található tartozék: a zipnek tartalmaznia kell az OwnedBeacons mappát.",
         "invalid_json": "Ez a fájl nem tartozék és nem kulcslista.",
-        "invalid_key": "Ez nem privát kulcs (28 bájt, base64 vagy hexadecimális formában)."
+        "invalid_key": "Ez nem privát kulcs (28 bájt, base64 vagy hexadecimális formában).",
+        "upload_missing": "A fájlt már beolvastuk: válaszd ki újra a fájlokat."
       },
       "abort": {
         "already_configured": "Ez a tartozék már hozzá van adva."

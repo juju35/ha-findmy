@@ -155,7 +155,8 @@
         "invalid_zip": "This file is not a zip of the Find My data.",
         "no_accessory_in_zip": "No accessory found: the zip should contain the OwnedBeacons folder.",
         "invalid_json": "This file is not an accessory or a list of keys.",
-        "invalid_key": "This is not a private key (28 bytes, in base64 or hexadecimal)."
+        "invalid_key": "This is not a private key (28 bytes, in base64 or hexadecimal).",
+        "upload_missing": "The file was already read: choose the files again."
       },
       "abort": {
         "already_configured": "This accessory is already added."

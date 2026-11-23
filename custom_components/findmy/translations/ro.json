@@ -155,7 +155,8 @@
         "invalid_zip": "Acest fișier nu este un zip cu datele Find My.",
         "no_accessory_in_zip": "Niciun accesoriu găsit: zip-ul trebuie să conțină dosarul OwnedBeacons.",
         "invalid_json": "Acest fișier nu este nici accesoriu, nici listă de chei.",
-        "invalid_key": "Nu este o cheie privată (28 de octeți, în base64 sau hexazecimal)."
+        "invalid_key": "Nu este o cheie privată (28 de octeți, în base64 sau hexazecimal).",
+        "upload_missing": "Fișierul a fost deja citit: alege din nou fișierele."
       },
       "abort": {
         "already_configured": "Acest accesoriu este deja adăugat."

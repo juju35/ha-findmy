@@ -155,7 +155,8 @@
         "invalid_zip": "Ova datoteka nije zip sa Find My podacima.",
         "no_accessory_in_zip": "Nije pronađen nijedan dodatak: zip mora da sadrži fasciklu OwnedBeacons.",
         "invalid_json": "Ova datoteka nije ni dodatak ni lista ključeva.",
-        "invalid_key": "Ovo nije privatni ključ (28 bajtova, u base64 ili heksadecimalnom obliku)."
+        "invalid_key": "Ovo nije privatni ključ (28 bajtova, u base64 ili heksadecimalnom obliku).",
+        "upload_missing": "Datoteka je već pročitana: ponovo izaberite datoteke."
       },
       "abort": {
         "already_configured": "Ovaj dodatak je već dodat."

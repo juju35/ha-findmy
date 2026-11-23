@@ -55,6 +55,8 @@ def uploads(tmp_path: Path) -> Generator[dict[str, bytes]]:
 
     @contextmanager
     def _process(hass: HomeAssistant, file_id: str):
+        if file_id not in files:
+            raise ValueError(f"File {file_id} does not exist")
         path = tmp_path / file_id
         path.write_bytes(files[file_id])
         yield path
@@ -320,3 +322,13 @@ async def test_add_key_and_json(hass: HomeAssistant, network_entry: MockConfigEn
 async def test_no_accessories_for_icloud(hass: HomeAssistant, icloud_entry: MockConfigEntry) -> None:
     icloud_entry.add_to_hass(hass)
     assert icloud_entry.supported_subentry_types == {}
+
+
+async def test_upload_already_read(
+    hass: HomeAssistant, network_entry: MockConfigEntry, uploads: dict[str, bytes]
+) -> None:
+    """A form sent again after an error points to files that were deleted once read."""
+    network_entry.add_to_hass(hass)
+    result = await _subentry(hass, network_entry, "plist")
+    result = await hass.config_entries.subentries.async_configure(result["flow_id"], {"file": DEV})
+    assert result["errors"] == {"base": "upload_missing"}

@@ -430,9 +430,15 @@ class FindMyOptionsFlow(OptionsFlow):
 
 
 def _read_upload(hass: HomeAssistant, file_id: str) -> bytes:
-    """The content of an uploaded file (run in the executor)."""
-    with process_uploaded_file(hass, file_id) as path:
-        return Path(path).read_bytes()
+    """The content of an uploaded file (run in the executor).
+
+    An uploaded file is deleted once read: a form sent again after an error must have its files chosen again.
+    """
+    try:
+        with process_uploaded_file(hass, file_id) as path:
+            return Path(path).read_bytes()
+    except ValueError as err:
+        raise ImportError_("upload_missing") from err
 
 
 class AccessoryFlow(ConfigSubentryFlow):

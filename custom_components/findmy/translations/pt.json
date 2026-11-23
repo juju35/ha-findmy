@@ -155,7 +155,8 @@
         "invalid_zip": "Este ficheiro não é um zip dos dados Find My.",
         "no_accessory_in_zip": "Nenhum acessório encontrado: o zip deve conter a pasta OwnedBeacons.",
         "invalid_json": "Este ficheiro não é um acessório nem uma lista de chaves.",
-        "invalid_key": "Não é uma chave privada (28 bytes, em base64 ou hexadecimal)."
+        "invalid_key": "Não é uma chave privada (28 bytes, em base64 ou hexadecimal).",
+        "upload_missing": "O ficheiro já foi lido: escolha novamente os ficheiros."
       },
       "abort": {
         "already_configured": "Este acessório já foi adicionado."
