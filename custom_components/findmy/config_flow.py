@@ -519,8 +519,8 @@ class AccessoryFlow(ConfigSubentryFlow):
             step_id="plist",
             data_schema=vol.Schema(
                 {
-                    vol.Required("file"): FileSelector(FileSelectorConfig(accept=".plist")),
-                    vol.Optional("alignment"): FileSelector(FileSelectorConfig(accept=".plist")),
+                    vol.Required("file"): FileSelector(FileSelectorConfig(accept=".plist,.record")),
+                    vol.Optional("alignment"): FileSelector(FileSelectorConfig(accept=".plist,.record")),
                     vol.Optional("name"): TextSelector(),
                 }
             ),
