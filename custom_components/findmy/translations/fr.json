@@ -80,6 +80,7 @@
       "invalid_auth": "Compte Apple ou mot de passe incorrect.",
       "apple_refused": "Apple a refusé la connexion : « {reason} ». Si le compte Apple et le mot de passe sont bons, patientez quelques minutes avant de réessayer, ou indiquez un serveur anisette dans les options avancées.",
       "sign_in_failed": "La connexion a échoué : « {reason} ». Réessayez dans quelques minutes, ou indiquez un serveur anisette dans les options avancées. L’erreur complète figure dans le journal de Home Assistant.",
+      "anisette_refused": "Apple a refusé d’enregistrer ce Home Assistant pour l’anisette : « {reason} ». Apple le fait pour certains réseaux et adresses (VPN, adresse partagée ou signalée) ou après trop de tentatives. Attendez une heure et réessayez, ou indiquez un serveur anisette dans les options avancées.",
       "cannot_connect": "Impossible de joindre Apple. Réessayez dans quelques minutes.",
       "anisette_error": "La connexion a échoué : vérifiez que le serveur anisette répond, ou laissez-le vide.",
       "code_not_sent": "Apple n'a pas envoyé de code de validation. Réessayez dans quelques minutes.",

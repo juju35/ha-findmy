@@ -80,6 +80,7 @@
       "invalid_auth": "Nesprávny účet Apple alebo heslo.",
       "apple_refused": "Apple odmietol prihlásenie: „{reason}“. Ak sú účet Apple a heslo správne, počkajte niekoľko minút a skúste to znova alebo zadajte server anisette v rozšírených možnostiach.",
       "sign_in_failed": "Prihlásenie zlyhalo: „{reason}“. Skúste to znova o pár minút alebo zadajte server anisette v rozšírených možnostiach. Celá chyba je v denníku Home Assistant.",
+      "anisette_refused": "Apple odmietol zaregistrovať tento Home Assistant pre anisette: „{reason}“. Apple to robí pri niektorých sieťach a adresách (VPN, zdieľaná alebo označená adresa) alebo po príliš veľa pokusoch. Počkajte hodinu a skúste to znova, alebo zadajte server anisette v Rozšírených možnostiach.",
       "cannot_connect": "Apple nie je dostupný. Skúste to znova o niekoľko minút.",
       "anisette_error": "Prihlásenie zlyhalo: overte, že server anisette odpovedá, alebo nechajte pole prázdne.",
       "code_not_sent": "Apple neposlal žiadny overovací kód. Skúste to znova o niekoľko minút.",

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import plistlib
 from datetime import UTC, datetime
 from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
@@ -25,11 +26,14 @@ from custom_components.findmy.icloud import (
 from custom_components.findmy.importer import accessory_from_plist
 from custom_components.findmy.models import battery_state_from_status
 from custom_components.findmy.network import (
+    AnisetteRefusedError,
+    NetworkAnisetteRefused,
     NetworkAuthError,
     NetworkClient,
     NetworkError,
     NetworkInvalidCredentials,
     NetworkSignInFailed,
+    _provisioning_refusal,
 )
 
 from .conftest import beacon_plist
@@ -246,6 +250,60 @@ async def test_network_client_anisette_error_without_libs_is_reported(tmp_path) 
     finally:
         await client.close()
     assert account.login.await_count == 1
+
+
+async def test_network_client_anisette_refused_is_reported(tmp_path) -> None:
+    """Apple refuses to register the device: its status is shown, the saved libraries are kept, no second try."""
+    libs = tmp_path / "findmy_anisette.bin"
+    libs.write_bytes(b"libs")
+    account = MagicMock()
+    account.login = AsyncMock(side_effect=AnisetteRefusedError("Device not allowed (-45061)"))
+    account.close = AsyncMock()
+    client = NetworkClient("test", libs)
+    try:
+        with (
+            patch("custom_components.findmy.network.AsyncAppleAccount", return_value=account),
+            pytest.raises(NetworkAnisetteRefused, match="Device not allowed"),
+        ):
+            await client.login("jane@example.com", "pw", None)
+    finally:
+        await client.close()
+    assert libs.exists()
+    assert account.login.await_count == 1
+
+
+def _plist(response: dict) -> bytes:
+    return plistlib.dumps({"Header": {}, "Response": response})
+
+
+@pytest.mark.parametrize(
+    ("body", "reason"),
+    [
+        (_plist({"ptm": "AA==", "tk": "AA=="}), None),
+        (_plist({"Status": {"ec": -45061, "em": "Device not allowed"}}), "Device not allowed (-45061)"),
+        (_plist({"Status": {"ec": -45061}}), "error -45061"),
+        (plistlib.dumps({"Header": {"Status": {"em": "Busy"}}, "Response": {}}), "Busy"),
+        (_plist({}), "no provisioning data in Apple's answer"),
+        (b"", "empty answer from Apple"),
+        (b"<html>503</html>", "unreadable answer from Apple: <html>503</html>"),
+    ],
+)
+def test_provisioning_refusal(body: bytes, reason: str | None) -> None:
+    assert _provisioning_refusal(body) == reason
+
+
+def test_provisioning_guard_raises_on_refusal() -> None:
+    """The anisette engine's request is wrapped: a refused registration raises with Apple's status."""
+    from anisette._session import ProvisioningSession  # noqa: PLC0415
+
+    post = ProvisioningSession._post
+    assert getattr(post, "_findmy_guard", False)
+    refused = _plist({"Status": {"ec": -45061, "em": "Device not allowed"}})
+    session = MagicMock()
+    session._request.return_value = refused
+    with pytest.raises(AnisetteRefusedError, match="-45061"):
+        post(session, "https://gsa", "", {}, "midFinishProvisioning.xml")
+    assert post(session, "https://gsa", "", {}, "midStartProvisioning.xml") == refused
 
 
 async def test_network_client_invalid_credentials() -> None:

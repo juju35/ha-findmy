@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.5 - 2026-11-25
+
+### Fixes
+- Find My network accounts: when Apple refuses to register the device of the anisette generated here (the sign-in failed with `KeyError: 'ptm'`), the form says so with Apple's own status and suggests an anisette server; Apple's libraries are no longer downloaded again for nothing.
+
 ## 1.0.4 - 2026-11-25
 
 ### Fixes
