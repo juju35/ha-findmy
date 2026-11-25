@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.3 - 2026-11-25
+
+### Fixes
+- Find My network accounts: a sign-in that fails in an unexpected way (the anisette engine that runs here, an answer from Apple that cannot be read) no longer ends the form without a word in the log. The form shows the reason and the error is logged with its traceback.
+
 ## 1.0.2 - 2026-11-25
 
 ### Fixes

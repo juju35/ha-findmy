@@ -56,6 +56,10 @@ class NetworkInvalidCredentials(NetworkAuthError):
     """Wrong Apple ID or password."""
 
 
+class NetworkSignInFailed(NetworkError):
+    """The sign-in failed in an unexpected way (anisette engine, Apple's answer): the reason is shown as it is."""
+
+
 @dataclass(frozen=True, slots=True)
 class SecondFactor:
     """A way to receive the verification code."""
@@ -103,8 +107,13 @@ class NetworkClient:
                 state = await self._account.login(email, password)
             except InvalidCredentialsError as err:
                 raise NetworkInvalidCredentials(str(err)) from err
-            except (UnauthorizedError, *_TRANSPORT_ERRORS) as err:
+            except (UnauthorizedError, aiohttp.ClientError, OSError) as err:
                 raise NetworkError(str(err)) from err
+            except Exception as err:  # noqa: BLE001 - anything else ends the sign-in with its reason, never unhandled
+                # The local anisette engine (download and emulation of Apple's libraries) and the parsing of Apple's
+                # answers raise errors of their own: logged with their traceback, shown in the form.
+                _LOGGER.warning("Find My network sign-in failed", exc_info=True)
+                raise NetworkSignInFailed(f"{type(err).__name__}: {err}".rstrip(": ")) from err
             if state == LoginState.REQUIRE_2FA:
                 return True
             if state != LoginState.LOGGED_IN:

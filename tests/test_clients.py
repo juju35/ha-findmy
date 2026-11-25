@@ -24,7 +24,13 @@ from custom_components.findmy.icloud import (
 )
 from custom_components.findmy.importer import accessory_from_plist
 from custom_components.findmy.models import battery_state_from_status
-from custom_components.findmy.network import NetworkAuthError, NetworkClient, NetworkError, NetworkInvalidCredentials
+from custom_components.findmy.network import (
+    NetworkAuthError,
+    NetworkClient,
+    NetworkError,
+    NetworkInvalidCredentials,
+    NetworkSignInFailed,
+)
 
 from .conftest import beacon_plist
 
@@ -208,6 +214,31 @@ async def test_network_client_invalid_credentials() -> None:
             pytest.raises(NetworkInvalidCredentials),
         ):
             await client.login("jane@example.com", "pw", "http://ani:6969")
+    finally:
+        await client.close()
+
+
+@pytest.mark.parametrize(
+    ("error", "reason"),
+    [
+        (TypeError('can only concatenate str (not "NoneType") to str'), "TypeError: can only concatenate"),
+        (KeyError("Status"), "KeyError: 'Status'"),
+        (RuntimeError(), "RuntimeError"),
+    ],
+)
+async def test_network_client_unexpected_sign_in_errors(error: Exception, reason: str) -> None:
+    """Any other failure of the sign-in (anisette engine, Apple's answer) ends it with its reason, never unhandled."""
+    account = MagicMock()
+    account.login = AsyncMock(side_effect=error)
+    account.close = AsyncMock()
+    client = NetworkClient("test")
+    try:
+        with (
+            patch("custom_components.findmy.network.AsyncAppleAccount", return_value=account),
+            pytest.raises(NetworkSignInFailed, match=reason.split(":")[0]) as caught,
+        ):
+            await client.login("jane@example.com", "pw", "http://ani:6969")
+        assert str(caught.value).startswith(reason)
     finally:
         await client.close()
 

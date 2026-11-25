@@ -79,6 +79,7 @@
     "error": {
       "invalid_auth": "Cont Apple sau parolă greșită.",
       "apple_refused": "Apple a refuzat conectarea: „{reason}”. Dacă contul Apple și parola sunt corecte, așteptați câteva minute și încercați din nou sau indicați un server anisette în opțiunile avansate.",
+      "sign_in_failed": "Conectarea a eșuat: „{reason}”. Încercați din nou peste câteva minute sau indicați un server anisette în Opțiuni avansate. Eroarea completă se află în jurnalul Home Assistant.",
       "cannot_connect": "Apple nu poate fi contactat. Încearcă din nou peste câteva minute.",
       "anisette_error": "Conectarea a eșuat: verifică dacă serverul anisette răspunde sau lasă câmpul gol.",
       "code_not_sent": "Apple nu a trimis niciun cod de verificare. Încearcă din nou peste câteva minute.",

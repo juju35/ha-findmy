@@ -79,6 +79,7 @@
     "error": {
       "invalid_auth": "Pogrešan Apple nalog ili lozinka.",
       "apple_refused": "Apple je odbio prijavu: „{reason}”. Ako su Apple nalog i lozinka ispravni, sačekajte nekoliko minuta i pokušajte ponovo ili unesite anisette server u naprednim opcijama.",
+      "sign_in_failed": "Prijava nije uspela: „{reason}”. Pokušajte ponovo za nekoliko minuta ili unesite anisette server u naprednim opcijama. Cela greška je u dnevniku Home Assistant-a.",
       "cannot_connect": "Apple nije dostupan. Pokušajte ponovo za nekoliko minuta.",
       "anisette_error": "Prijava nije uspela: proverite da li anisette server odgovara ili ostavite polje prazno.",
       "code_not_sent": "Apple nije poslao verifikacioni kod. Pokušajte ponovo za nekoliko minuta.",

@@ -28,7 +28,12 @@ from custom_components.findmy.const import (
     SUBENTRY_ACCESSORY,
 )
 from custom_components.findmy.icloud import ICloudError, ICloudInvalidCredentials
-from custom_components.findmy.network import NetworkError, NetworkInvalidCredentials, SecondFactor
+from custom_components.findmy.network import (
+    NetworkError,
+    NetworkInvalidCredentials,
+    NetworkSignInFailed,
+    SecondFactor,
+)
 
 from .conftest import EMAIL, SESSION, beacon_bytes
 
@@ -159,6 +164,7 @@ async def test_network_single_method(hass: HomeAssistant, network_client: MagicM
         (NetworkInvalidCredentials("Password authentication failed: Your Apple ID was locked."), None, "apple_refused"),
         (NetworkError("x"), None, "cannot_connect"),
         (NetworkError("x"), "http://ani", "anisette_error"),
+        (NetworkSignInFailed("MaxRetryError: download failed"), None, "sign_in_failed"),
     ],
 )
 async def test_network_errors(
@@ -173,6 +179,8 @@ async def test_network_errors(
     assert result["errors"] == {"base": expected}
     if expected == "apple_refused":
         assert result["description_placeholders"] == {"reason": "Your Apple ID was locked."}
+    if expected == "sign_in_failed":
+        assert result["description_placeholders"] == {"reason": "MaxRetryError: download failed"}
 
 
 async def test_duplicate_account(

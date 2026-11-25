@@ -68,7 +68,7 @@ from .importer import (
     accessory_from_plist,
     static_key,
 )
-from .network import NetworkClient, NetworkError, NetworkInvalidCredentials, SecondFactor
+from .network import NetworkClient, NetworkError, NetworkInvalidCredentials, NetworkSignInFailed, SecondFactor
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -264,6 +264,10 @@ class FindMyConfigFlow(ConfigFlow, domain=DOMAIN):
                 placeholders["reason"] = reason
             else:
                 errors["base"] = "invalid_auth"
+            return None
+        except NetworkSignInFailed as err:
+            errors["base"] = "sign_in_failed"
+            placeholders["reason"] = str(err)
             return None
         except (NetworkError, TimeoutError) as err:
             _LOGGER.warning("Find My network sign-in failed: %s", err)
