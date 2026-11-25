@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import plistlib
 import traceback
 from dataclasses import dataclass
 from pathlib import Path
@@ -61,6 +62,71 @@ class NetworkSignInFailed(NetworkError):
     """The sign-in failed in an unexpected way (anisette engine, Apple's answer): the reason is shown as it is."""
 
 
+class NetworkAnisetteRefused(NetworkError):
+    """Apple refused to register the virtual device of the anisette generated here: the reason is Apple's status."""
+
+
+class AnisetteRefusedError(RuntimeError):
+    """Apple's answer to the end of the device registration carries no provisioning data, only a status."""
+
+
+_FINISH_PROVISIONING = "midFinishProvisioning.xml"
+
+
+def _guard_provisioning() -> None:
+    """Check Apple's answer to the end of the device registration before the anisette engine reads it.
+
+    Apple refuses to register a virtual device (an address or a network it limits, too many registrations) with an
+    answer that carries a status instead of the provisioning data: read as it is, it fails with a bare KeyError.
+    The request of the engine is wrapped once, so that such an answer raises AnisetteRefusedError with Apple's status.
+    """
+    try:
+        from anisette._session import ProvisioningSession  # noqa: PLC0415 - optional: the engine may change
+    except ImportError:  # pragma: no cover - engine without this module: nothing to guard
+        return
+    post = getattr(ProvisioningSession, "_post", None)
+    if post is None or getattr(post, "_findmy_guard", False):
+        return
+
+    def _post(self: Any, url: str, data: str, extra_headers: dict[str, str], cache_key: str | None = None) -> bytes:
+        body: bytes = post(self, url, data, extra_headers, cache_key)
+        if cache_key == _FINISH_PROVISIONING:
+            reason = _provisioning_refusal(body)
+            if reason is not None:
+                raise AnisetteRefusedError(reason)
+        return body
+
+    _post._findmy_guard = True  # type: ignore[attr-defined]
+    ProvisioningSession._post = _post  # type: ignore[method-assign]
+
+
+def _provisioning_refusal(body: bytes) -> str | None:
+    """None when the answer carries the provisioning data, else Apple's status as a readable reason."""
+    try:
+        answer = plistlib.loads(body)
+    except (plistlib.InvalidFileException, ValueError, TypeError):
+        text = body[:200].decode("utf-8", "replace").strip()
+        return f"unreadable answer from Apple: {text}" if text else "empty answer from Apple"
+    response = answer.get("Response") if isinstance(answer, dict) else None
+    if isinstance(response, dict) and "ptm" in response and "tk" in response:
+        return None
+    status: Any = None
+    for holder in (response, answer.get("Header") if isinstance(answer, dict) else None, answer):
+        if isinstance(holder, dict) and isinstance(holder.get("Status"), dict):
+            status = holder["Status"]
+            break
+    if not status:
+        return "no provisioning data in Apple's answer"
+    message = str(status.get("em") or "").strip()
+    code = status.get("ec")
+    if message and code is not None:
+        return f"{message} ({code})"
+    return message or f"error {code}"
+
+
+_guard_provisioning()
+
+
 @dataclass(frozen=True, slots=True)
 class SecondFactor:
     """A way to receive the verification code."""
@@ -110,6 +176,9 @@ class NetworkClient:
             try:
                 try:
                     state = await _attempt()
+                except AnisetteRefusedError:
+                    # Apple's decision, not a damaged file: downloading the libraries again would change nothing.
+                    raise
                 except Exception as err:
                     # The local anisette engine keeps Apple's libraries it downloaded in a file, reused at every
                     # sign-in: a damaged file fails them all before Apple is even asked. Removed, and tried once more
@@ -120,6 +189,9 @@ class NetworkClient:
                     state = await _attempt()
             except InvalidCredentialsError as err:
                 raise NetworkInvalidCredentials(str(err)) from err
+            except AnisetteRefusedError as err:
+                _LOGGER.warning("Apple refused to register the anisette device generated here: %s", err)
+                raise NetworkAnisetteRefused(str(err)) from err
             except (UnauthorizedError, aiohttp.ClientError, OSError) as err:
                 raise NetworkError(str(err)) from err
             except Exception as err:  # noqa: BLE001 - anything else ends the sign-in with its reason, never unhandled

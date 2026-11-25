@@ -80,6 +80,7 @@
       "invalid_auth": "Napačen račun Apple ali geslo.",
       "apple_refused": "Apple je zavrnil prijavo: »{reason}«. Če sta račun Apple in geslo pravilna, počakajte nekaj minut in poskusite znova ali vnesite strežnik anisette v naprednih možnostih.",
       "sign_in_failed": "Prijava ni uspela: »{reason}«. Poskusite znova čez nekaj minut ali vnesite strežnik anisette v naprednih možnostih. Celotna napaka je v dnevniku Home Assistant.",
+      "anisette_refused": "Apple je zavrnil registracijo tega Home Assistanta za anisette: »{reason}«. Apple to stori pri nekaterih omrežjih in naslovih (VPN, deljen ali označen naslov) ali po preveč poskusih. Počakajte eno uro in poskusite znova ali vnesite strežnik anisette v Naprednih možnostih.",
       "cannot_connect": "Apple ni dosegljiv. Poskusite znova čez nekaj minut.",
       "anisette_error": "Prijava ni uspela: preverite, ali strežnik anisette odgovarja, ali pustite polje prazno.",
       "code_not_sent": "Apple ni poslal potrditvene kode. Poskusite znova čez nekaj minut.",

@@ -80,6 +80,7 @@
       "invalid_auth": "Falscher Apple Account oder falsches Passwort.",
       "apple_refused": "Apple hat die Anmeldung abgelehnt: „{reason}“. Wenn Apple Account und Passwort stimmen, warte einige Minuten und versuche es erneut, oder gib unter Erweiterte Optionen einen Anisette-Server an.",
       "sign_in_failed": "Die Anmeldung ist fehlgeschlagen: „{reason}“. Versuche es in ein paar Minuten erneut oder gib unter „Erweiterte Optionen“ einen Anisette-Server an. Der vollständige Fehler steht im Home-Assistant-Protokoll.",
+      "anisette_refused": "Apple hat die Registrierung dieses Home Assistant für Anisette abgelehnt: „{reason}“. Apple tut dies bei manchen Netzen und Adressen (VPN, geteilte oder markierte Adresse) oder nach zu vielen Versuchen. Warte eine Stunde und versuche es erneut, oder gib unter Erweiterte Optionen einen Anisette-Server an.",
       "cannot_connect": "Apple ist nicht erreichbar. Versuche es in ein paar Minuten erneut.",
       "anisette_error": "Anmeldung fehlgeschlagen: Prüfe, ob der Anisette-Server antwortet, oder lass das Feld leer.",
       "code_not_sent": "Apple hat keinen Bestätigungscode gesendet. Versuche es in ein paar Minuten erneut.",

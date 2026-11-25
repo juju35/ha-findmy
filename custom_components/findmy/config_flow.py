@@ -68,7 +68,14 @@ from .importer import (
     accessory_from_plist,
     static_key,
 )
-from .network import NetworkClient, NetworkError, NetworkInvalidCredentials, NetworkSignInFailed, SecondFactor
+from .network import (
+    NetworkAnisetteRefused,
+    NetworkClient,
+    NetworkError,
+    NetworkInvalidCredentials,
+    NetworkSignInFailed,
+    SecondFactor,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -264,6 +271,10 @@ class FindMyConfigFlow(ConfigFlow, domain=DOMAIN):
                 placeholders["reason"] = reason
             else:
                 errors["base"] = "invalid_auth"
+            return None
+        except NetworkAnisetteRefused as err:
+            errors["base"] = "anisette_refused"
+            placeholders["reason"] = str(err)
             return None
         except NetworkSignInFailed as err:
             errors["base"] = "sign_in_failed"

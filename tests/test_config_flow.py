@@ -29,6 +29,7 @@ from custom_components.findmy.const import (
 )
 from custom_components.findmy.icloud import ICloudError, ICloudInvalidCredentials
 from custom_components.findmy.network import (
+    NetworkAnisetteRefused,
     NetworkError,
     NetworkInvalidCredentials,
     NetworkSignInFailed,
@@ -165,6 +166,7 @@ async def test_network_single_method(hass: HomeAssistant, network_client: MagicM
         (NetworkError("x"), None, "cannot_connect"),
         (NetworkError("x"), "http://ani", "anisette_error"),
         (NetworkSignInFailed("MaxRetryError: download failed"), None, "sign_in_failed"),
+        (NetworkAnisetteRefused("Device not allowed (-45061)"), None, "anisette_refused"),
     ],
 )
 async def test_network_errors(
@@ -181,6 +183,8 @@ async def test_network_errors(
         assert result["description_placeholders"] == {"reason": "Your Apple ID was locked."}
     if expected == "sign_in_failed":
         assert result["description_placeholders"] == {"reason": "MaxRetryError: download failed"}
+    if expected == "anisette_refused":
+        assert result["description_placeholders"] == {"reason": "Device not allowed (-45061)"}
 
 
 async def test_duplicate_account(

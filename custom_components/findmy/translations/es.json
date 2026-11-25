@@ -80,6 +80,7 @@
       "invalid_auth": "Cuenta de Apple o contraseña incorrecta.",
       "apple_refused": "Apple rechazó el inicio de sesión: «{reason}». Si la cuenta de Apple y la contraseña son correctas, espera unos minutos y vuelve a intentarlo, o indica un servidor anisette en Opciones avanzadas.",
       "sign_in_failed": "El inicio de sesión ha fallado: «{reason}». Vuelve a intentarlo en unos minutos o indica un servidor anisette en Opciones avanzadas. El error completo está en el registro de Home Assistant.",
+      "anisette_refused": "Apple se ha negado a registrar este Home Assistant para anisette: «{reason}». Apple lo hace con algunas redes y direcciones (VPN, dirección compartida o marcada) o tras demasiados intentos. Espera una hora y vuelve a intentarlo, o indica un servidor anisette en Opciones avanzadas.",
       "cannot_connect": "No se puede contactar con Apple. Inténtalo de nuevo en unos minutos.",
       "anisette_error": "El inicio de sesión falló: comprueba que el servidor anisette responde, o déjalo vacío.",
       "code_not_sent": "Apple no envió ningún código de verificación. Inténtalo de nuevo en unos minutos.",
