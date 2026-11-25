@@ -78,6 +78,7 @@
     },
     "error": {
       "invalid_auth": "Account Apple o password errati.",
+      "apple_refused": "Apple ha rifiutato l'accesso: «{reason}». Se l'account Apple e la password sono corretti, attendi qualche minuto e riprova, oppure indica un server anisette nelle opzioni avanzate.",
       "cannot_connect": "Impossibile raggiungere Apple. Riprova tra qualche minuto.",
       "anisette_error": "Accesso non riuscito: verifica che il server anisette risponda, oppure lascialo vuoto.",
       "code_not_sent": "Apple non ha inviato un codice di verifica. Riprova tra qualche minuto.",

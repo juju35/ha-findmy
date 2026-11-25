@@ -78,6 +78,7 @@
     },
     "error": {
       "invalid_auth": "Conta Apple ou senha incorreta.",
+      "apple_refused": "A Apple recusou o login: “{reason}”. Se a conta Apple e a senha estiverem corretas, aguarde alguns minutos e tente novamente, ou informe um servidor anisette nas opções avançadas.",
       "cannot_connect": "Não foi possível acessar a Apple. Tente de novo em alguns minutos.",
       "anisette_error": "A entrada falhou: verifique se o servidor anisette responde, ou deixe-o vazio.",
       "code_not_sent": "A Apple não enviou nenhum código de verificação. Tente de novo em alguns minutos.",

@@ -233,27 +233,37 @@ class FindMyConfigFlow(ConfigFlow, domain=DOMAIN):
 
     async def async_step_network(self, user_input: dict[str, Any] | None = None) -> ConfigFlowResult:
         errors: dict[str, str] = {}
+        placeholders: dict[str, str] = {}
         if user_input is not None:
             await self._take_credentials(user_input, SOURCE_NETWORK)
             self._anisette_url = (user_input.get("advanced") or {}).get(CONF_ANISETTE_URL) or None
-            result = await self._network_login(errors)
+            result = await self._network_login(errors, placeholders)
             if result is not None:
                 return result
         return self.async_show_form(
             step_id="network",
             data_schema=_network_schema(self._apple_id, self._anisette_url),
             errors=errors,
+            description_placeholders=placeholders or None,
         )
 
-    async def _network_login(self, errors: dict[str, str]) -> ConfigFlowResult | None:
+    async def _network_login(self, errors: dict[str, str], placeholders: dict[str, str]) -> ConfigFlowResult | None:
         if self._network is None:
             self._network = NetworkClient(
                 f"flow-{self.flow_id[:6]}", Path(self.hass.config.path(".storage", f"{DOMAIN}_anisette.bin"))
             )
         try:
             needs_code = await self._network.login(self._apple_id, self._password, self._anisette_url)
-        except NetworkInvalidCredentials:
-            errors["base"] = "invalid_auth"
+        except NetworkInvalidCredentials as err:
+            # Apple answers every refusal of the sign-in the same way (a wrong password, but also a device it does
+            # not trust, too many attempts, a locked account): show its own message instead of "wrong password".
+            reason = _apple_reason(err)
+            _LOGGER.warning("Apple refused the Find My network sign-in: %s", err)
+            if reason:
+                errors["base"] = "apple_refused"
+                placeholders["reason"] = reason
+            else:
+                errors["base"] = "invalid_auth"
             return None
         except (NetworkError, TimeoutError) as err:
             _LOGGER.warning("Find My network sign-in failed: %s", err)
@@ -375,6 +385,11 @@ class FindMyConfigFlow(ConfigFlow, domain=DOMAIN):
             errors=errors,
             description_placeholders={"account": self._apple_id},
         )
+
+
+def _apple_reason(err: Exception) -> str:
+    """Apple's own message in a refused sign-in ("Password authentication failed: <message>")."""
+    return str(err).partition(": ")[2].strip() or str(err).strip()
 
 
 def _factor_value(factor: SecondFactor) -> str:

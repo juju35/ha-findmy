@@ -78,6 +78,7 @@
     },
     "error": {
       "invalid_auth": "Hibás Apple-fiók vagy jelszó.",
+      "apple_refused": "Az Apple elutasította a bejelentkezést: „{reason}”. Ha az Apple-fiók és a jelszó helyes, várjon néhány percet, és próbálja újra, vagy adjon meg anisette-szervert a speciális beállításokban.",
       "cannot_connect": "Az Apple nem érhető el. Próbáld újra néhány perc múlva.",
       "anisette_error": "A bejelentkezés nem sikerült: ellenőrizd, hogy az anisette-kiszolgáló válaszol-e, vagy hagyd üresen.",
       "code_not_sent": "Az Apple nem küldött ellenőrző kódot. Próbáld újra néhány perc múlva.",
