@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.4 - 2026-11-25
+
+### Fixes
+- Find My network accounts: when the anisette generated here fails with the Apple libraries it saved (a damaged file fails every sign-in before Apple is asked), the file is removed and the sign-in tried once more with a fresh download.
+
 ## 1.0.3 - 2026-11-25
 
 ### Fixes
