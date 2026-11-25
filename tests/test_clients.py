@@ -203,6 +203,51 @@ async def test_network_client() -> None:
     account.close.assert_awaited()
 
 
+def _anisette_error() -> Exception:
+    """An error raised from a frame of the anisette engine, as a damaged libraries file gives."""
+    scope: dict = {}
+    exec(compile("def load():\n    raise EOFError('Compressed file ended')\n", "/lib/anisette/_fs.py", "exec"), scope)  # noqa: S102
+    try:
+        scope["load"]()
+    except EOFError as err:
+        return err
+    raise AssertionError
+
+
+async def test_network_client_drops_damaged_anisette_libs(tmp_path) -> None:
+    """A local anisette failure with saved libraries: the file is removed and the sign-in tried once more."""
+    libs = tmp_path / "findmy_anisette.bin"
+    libs.write_bytes(b"broken")
+    account = MagicMock()
+    account.login = AsyncMock(side_effect=[_anisette_error(), LoginState.REQUIRE_2FA])
+    account.close = AsyncMock()
+    client = NetworkClient("test", libs)
+    try:
+        with patch("custom_components.findmy.network.AsyncAppleAccount", return_value=account):
+            assert await client.login("jane@example.com", "pw", None) is True
+    finally:
+        await client.close()
+    assert not libs.exists()
+    assert account.login.await_count == 2
+
+
+async def test_network_client_anisette_error_without_libs_is_reported(tmp_path) -> None:
+    """No saved libraries (or a remote anisette server): no second try, the reason is shown."""
+    account = MagicMock()
+    account.login = AsyncMock(side_effect=_anisette_error())
+    account.close = AsyncMock()
+    client = NetworkClient("test", tmp_path / "missing.bin")
+    try:
+        with (
+            patch("custom_components.findmy.network.AsyncAppleAccount", return_value=account),
+            pytest.raises(NetworkSignInFailed, match="EOFError"),
+        ):
+            await client.login("jane@example.com", "pw", None)
+    finally:
+        await client.close()
+    assert account.login.await_count == 1
+
+
 async def test_network_client_invalid_credentials() -> None:
     account = MagicMock()
     account.login = AsyncMock(side_effect=InvalidCredentialsError("bad"))

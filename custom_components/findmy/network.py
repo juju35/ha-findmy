@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import traceback
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -97,14 +98,26 @@ class NetworkClient:
     async def login(self, email: str, password: str, anisette_url: str | None) -> bool:
         """Sign in from scratch; True when a verification code is needed next."""
 
-        async def _login() -> bool:
+        async def _attempt() -> LoginState:
             await self._close_account()
             anisette = (
                 RemoteAnisetteProvider(anisette_url) if anisette_url else LocalAnisetteProvider(libs_path=self._libs)
             )
             self._account = AsyncAppleAccount(anisette=anisette)
+            return await self._account.login(email, password)
+
+        async def _login() -> bool:
             try:
-                state = await self._account.login(email, password)
+                try:
+                    state = await _attempt()
+                except Exception as err:
+                    # The local anisette engine keeps Apple's libraries it downloaded in a file, reused at every
+                    # sign-in: a damaged file fails them all before Apple is even asked. Removed, and tried once more
+                    # with a fresh download.
+                    if anisette_url or not _from_anisette(err) or not self._drop_anisette_libs():
+                        raise
+                    _LOGGER.warning("Local anisette failed (%s): its saved libraries were removed, trying again", err)
+                    state = await _attempt()
             except InvalidCredentialsError as err:
                 raise NetworkInvalidCredentials(str(err)) from err
             except (UnauthorizedError, aiohttp.ClientError, OSError) as err:
@@ -122,6 +135,17 @@ class NetworkClient:
             return False
 
         return await self._worker.run(_login, timeout=120)
+
+    def _drop_anisette_libs(self) -> bool:
+        """Remove the saved anisette libraries (worker thread); True when there was a file to remove."""
+        if self._libs is None or not self._libs.is_file():
+            return False
+        try:
+            self._libs.unlink()
+        except OSError as err:
+            _LOGGER.debug("Anisette libraries not removed: %s", err)
+            return False
+        return True
 
     async def second_factors(self) -> list[SecondFactor]:
         """The ways Apple offers to send the verification code."""
@@ -275,6 +299,15 @@ class NetworkClient:
         finally:
             # Joining the thread blocks: never on the caller's loop.
             await asyncio.get_running_loop().run_in_executor(None, self._worker.stop)
+
+
+def _from_anisette(err: BaseException) -> bool:
+    """Whether an error was raised by the anisette engine (its frames in the traceback), not by Apple's answer."""
+    for frame in traceback.extract_tb(err.__traceback__):
+        path = frame.filename.replace("\\", "/")
+        if "/anisette/" in path or path.endswith("/anisette.py"):
+            return True
+    return False
 
 
 def _report(report: LocationReport | None) -> Report | None:
