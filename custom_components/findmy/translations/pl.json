@@ -78,6 +78,7 @@
     },
     "error": {
       "invalid_auth": "Nieprawidłowe konto Apple lub hasło.",
+      "apple_refused": "Apple odrzuciło logowanie: „{reason}”. Jeśli konto Apple i hasło są poprawne, odczekaj kilka minut i spróbuj ponownie albo podaj serwer anisette w opcjach zaawansowanych.",
       "cannot_connect": "Nie można połączyć się z Apple. Spróbuj ponownie za kilka minut.",
       "anisette_error": "Logowanie nie powiodło się: sprawdź, czy serwer anisette odpowiada, lub zostaw pole puste.",
       "code_not_sent": "Apple nie wysłał kodu weryfikacyjnego. Spróbuj ponownie za kilka minut.",

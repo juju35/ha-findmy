@@ -78,6 +78,7 @@
     },
     "error": {
       "invalid_auth": "Fel Apple-konto eller lösenord.",
+      "apple_refused": "Apple nekade inloggningen: ”{reason}”. Om Apple-kontot och lösenordet stämmer, vänta några minuter och försök igen, eller ange en anisette-server under avancerade alternativ.",
       "cannot_connect": "Apple kan inte nås. Försök igen om några minuter.",
       "anisette_error": "Inloggningen misslyckades: kontrollera att anisette-servern svarar, eller lämna fältet tomt.",
       "code_not_sent": "Apple skickade ingen verifieringskod. Försök igen om några minuter.",

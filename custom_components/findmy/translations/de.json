@@ -78,6 +78,7 @@
     },
     "error": {
       "invalid_auth": "Falscher Apple Account oder falsches Passwort.",
+      "apple_refused": "Apple hat die Anmeldung abgelehnt: „{reason}“. Wenn Apple Account und Passwort stimmen, warte einige Minuten und versuche es erneut, oder gib unter Erweiterte Optionen einen Anisette-Server an.",
       "cannot_connect": "Apple ist nicht erreichbar. Versuche es in ein paar Minuten erneut.",
       "anisette_error": "Anmeldung fehlgeschlagen: Prüfe, ob der Anisette-Server antwortet, oder lass das Feld leer.",
       "code_not_sent": "Apple hat keinen Bestätigungscode gesendet. Versuche es in ein paar Minuten erneut.",

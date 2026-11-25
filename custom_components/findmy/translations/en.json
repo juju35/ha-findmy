@@ -78,6 +78,7 @@
     },
     "error": {
       "invalid_auth": "Wrong Apple Account or password.",
+      "apple_refused": "Apple refused the sign-in: “{reason}”. If the Apple Account and password are right, wait a few minutes and try again, or set an anisette server under Advanced options.",
       "cannot_connect": "Apple could not be reached. Try again in a few minutes.",
       "anisette_error": "Signing in failed: check that the anisette server answers, or leave it empty.",
       "code_not_sent": "Apple did not send a verification code. Try again in a few minutes.",

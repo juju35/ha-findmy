@@ -78,6 +78,7 @@
     },
     "error": {
       "invalid_auth": "Forkert Apple-konto eller adgangskode.",
+      "apple_refused": "Apple afviste login: “{reason}”. Hvis Apple-kontoen og adgangskoden er korrekte, så vent et par minutter og prøv igen, eller angiv en anisette-server under avancerede indstillinger.",
       "cannot_connect": "Apple kan ikke nås. Prøv igen om et par minutter.",
       "anisette_error": "Login mislykkedes: kontrollér, at anisette-serveren svarer, eller lad feltet stå tomt.",
       "code_not_sent": "Apple sendte ingen bekræftelseskode. Prøv igen om et par minutter.",

@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "findmy"
-VERSION: Final = "1.0.1"
+VERSION: Final = "1.0.2"
 
 # Config entry data
 CONF_SOURCE: Final = "source"

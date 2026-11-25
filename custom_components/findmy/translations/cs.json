@@ -78,6 +78,7 @@
     },
     "error": {
       "invalid_auth": "Nesprávný účet Apple nebo heslo.",
+      "apple_refused": "Apple odmítl přihlášení: „{reason}“. Pokud jsou účet Apple a heslo správné, počkejte několik minut a zkuste to znovu, nebo zadejte server anisette v pokročilých možnostech.",
       "cannot_connect": "Apple není dostupný. Zkuste to znovu za několik minut.",
       "anisette_error": "Přihlášení selhalo: ověřte, že server anisette odpovídá, nebo nechte pole prázdné.",
       "code_not_sent": "Apple neposlal žádný ověřovací kód. Zkuste to znovu za několik minut.",

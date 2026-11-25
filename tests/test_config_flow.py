@@ -155,7 +155,8 @@ async def test_network_single_method(hass: HomeAssistant, network_client: MagicM
 @pytest.mark.parametrize(
     ("error", "anisette", "expected"),
     [
-        (NetworkInvalidCredentials("x"), None, "invalid_auth"),
+        (NetworkInvalidCredentials(""), None, "invalid_auth"),
+        (NetworkInvalidCredentials("Password authentication failed: Your Apple ID was locked."), None, "apple_refused"),
         (NetworkError("x"), None, "cannot_connect"),
         (NetworkError("x"), "http://ani", "anisette_error"),
     ],
@@ -170,6 +171,8 @@ async def test_network_errors(
         result["flow_id"], {CONF_APPLE_ID: EMAIL, CONF_PASSWORD: "pw", "advanced": advanced}
     )
     assert result["errors"] == {"base": expected}
+    if expected == "apple_refused":
+        assert result["description_placeholders"] == {"reason": "Your Apple ID was locked."}
 
 
 async def test_duplicate_account(

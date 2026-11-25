@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.2 - 2026-11-25
+
+### Fixes
+- Find My network accounts: when Apple refuses the sign-in, its own message is shown (and logged) instead of always "Wrong Apple Account or password" — Apple gives that refusal for a device it does not trust, too many attempts or a locked account too, with the right password
+
 ## 1.0.1 - 2026-11-23
 
 ### Fixes
