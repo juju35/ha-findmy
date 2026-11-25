@@ -79,6 +79,7 @@
     "error": {
       "invalid_auth": "Onjuiste Apple Account of onjuist wachtwoord.",
       "apple_refused": "Apple heeft het inloggen geweigerd: '{reason}'. Als het Apple-account en het wachtwoord kloppen, wacht dan een paar minuten en probeer het opnieuw, of stel een anisette-server in onder Geavanceerde opties.",
+      "sign_in_failed": "Aanmelden mislukt: ‘{reason}’. Probeer het over een paar minuten opnieuw of geef een anisette-server op onder Geavanceerde opties. De volledige fout staat in het Home Assistant-logboek.",
       "cannot_connect": "Apple is niet bereikbaar. Probeer het over een paar minuten opnieuw.",
       "anisette_error": "Inloggen mislukt: controleer of de anisette-server antwoordt, of laat het veld leeg.",
       "code_not_sent": "Apple heeft geen verificatiecode gestuurd. Probeer het over een paar minuten opnieuw.",

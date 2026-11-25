@@ -79,6 +79,7 @@
     "error": {
       "invalid_auth": "Nepareizs Apple konts vai parole.",
       "apple_refused": "Apple noraidīja pierakstīšanos: “{reason}”. Ja Apple konts un parole ir pareizi, pagaidiet dažas minūtes un mēģiniet vēlreiz vai norādiet anisette serveri papildu opcijās.",
+      "sign_in_failed": "Pierakstīšanās neizdevās: “{reason}”. Mēģiniet vēlreiz pēc dažām minūtēm vai norādiet anisette serveri papildu opcijās. Pilna kļūda ir Home Assistant žurnālā.",
       "cannot_connect": "Apple nav sasniedzams. Mēģiniet vēlreiz pēc dažām minūtēm.",
       "anisette_error": "Pierakstīšanās neizdevās: pārbaudiet, vai anisette serveris atbild, vai atstājiet lauku tukšu.",
       "code_not_sent": "Apple nenosūtīja verifikācijas kodu. Mēģiniet vēlreiz pēc dažām minūtēm.",
